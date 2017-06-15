@@ -1,0 +1,1964 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Ashford restful api",
+    "version": "1.0.0",
+    "title": "Ashford Decoupling REST API"
+  },
+  "host": "devd.alliancetime.com",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "AUTH",
+      "description": "Ashford AUTH APIs"
+    },
+    {
+      "name": "USERS",
+      "description": "User related APIs"
+    },
+    {
+      "name": "Navigation",
+      "description": "Guided Navigation APIs"
+    },
+    {
+      "name": "PRICE",
+      "description": "Price related APIs"
+    },
+    {
+      "name": "INVENTORY",
+      "description": "Inventory related APIs"
+    },
+    {
+      "name": "CART",
+      "description": "Cart related APIs"
+    },
+    {
+      "name": "CHECKOUT",
+      "description": "Checkout APIs"
+    }
+  ],
+  "paths": {
+    "/rest/users/login": {
+      "post": {
+        "description": " Login API \n- username/password are mandatory fields\n- Cookies will be added into response (jsessionid and dyn_user_id) once login succeed.",
+        "tags": [
+          "AUTH"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "login",
+            "description": "Email",
+            "in": "formData",
+            "required": true,
+            "default": "darcyyang@aaxiscommerce.com",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "login success",
+            "headers": {
+              "Set-Cookie": {
+                "type": "string",
+                "description": "ATG Auth token",
+                "default": "DYN_USER_CONFIRM=0312b45d4888fe11ec2b192e2d9147ee;DYN_USER_ID =1440003;JSESSIONID=70055B7A54504E528504A42B430CC2AA.devd-store21;firstname=Darcy;lastname=Yang"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/login-success-response"
+            }
+          },
+          "401": {
+            "description": "login failure",
+            "schema": {
+              "$ref": "#/definitions/login-failure-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/users/logout": {
+      "post": {
+        "description": "Atg cookies will be cleared once logout succeed.",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "DYN_USER_CONFIRM=0312b45d4888fe11ec2b192e2d9147ee;DYN_USER_ID =1440003;JSESSIONID=70055B7A54504E528504A42B430CC2AA.devd-store21;firstname=Darcy;lastname=Yang",
+            "description": "The session cookie (for any operations that require auth)"
+          }
+        ],
+        "tags": [
+          "AUTH"
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/logout-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/users/resetpassword": {
+      "post": {
+        "description": " Reset password API ",
+        "tags": [
+          "USERS"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "default": "darcyyang@aaxiscommerce.com",
+            "description": "User email",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/reset-pwd-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/users": {
+      "post": {
+        "tags": [
+          "USERS"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "description": "Registration new user API",
+        "parameters": [
+          {
+            "name": "firstName",
+            "in": "formData",
+            "default": "darcy",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "lastName",
+            "in": "formData",
+            "default": "yang",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "default": "darcyyang@aaxiscommerce.com",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "default": "passw0rd1",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "passwordConfirm",
+            "in": "formData",
+            "default": "passw0rd1",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/categories/{endecaParams}": {
+      "get": {
+        "tags": [
+          "Navigation"
+        ],
+        "description": "Category landing page API.\n- Facets data\n- Product list\n- Sortby options\n- Total count\n- Current page\n- Page size",
+        "parameters": [
+          {
+            "name": "endecaParams",
+            "in": "path",
+            "description": "Endeca dimension parameters",
+            "required": true,
+            "default": "N-7z3",
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/CategoryList"
+            }
+          }
+        }
+      }
+    },
+    "/rest/products/{productId}": {
+      "get": {
+        "tags": [
+          "Navigation"
+        ],
+        "description": "Product detail API\n- product detail info\n- price info\n- Inventory info\n- product image info\n- SKUs\n- Warranty Items\n- Enrichment Info\n- Brand Story",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Product Id",
+            "default": "R27814702.pid",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "skuId",
+            "in": "query",
+            "description": "SKU ID",
+            "required": false,
+            "type": "string",
+            "format": "string",
+            "default": "R27814702"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/ProductPage"
+            }
+          }
+        }
+      }
+    },
+    "/rest/categories": {
+      "get": {
+        "tags": [
+          "Navigation"
+        ],
+        "description": "Top Navigation API",
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/NavigationMenu"
+            }
+          }
+        }
+      }
+    },
+    "/rest/price/{skuId}": {
+      "get": {
+        "tags": [
+          "PRICE"
+        ],
+        "description": "Retrieve price by SKU ID",
+        "parameters": [
+          {
+            "name": "skuId",
+            "in": "path",
+            "description": "sku id",
+            "default": "R27814702",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/success-price-response"
+            }
+          },
+          "400": {
+            "description": "faliure response",
+            "schema": {
+              "$ref": "#/definitions/faliure-price-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/inventory/{skuId}": {
+      "get": {
+        "tags": [
+          "INVENTORY"
+        ],
+        "description": "inventory info of SKU",
+        "parameters": [
+          {
+            "name": "skuId",
+            "in": "path",
+            "default": "R27814702",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/inventory-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/orders/addItemToCart": {
+      "post": {
+        "tags": [
+          "ORDER"
+        ],
+        "description": "add sku(s) to cart. This API support add one item into cart also supports the advanced features of add multiple items into cart.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "addItemsInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/addItem-request"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/addItem-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/checkout/shippingAddresses": {
+      "get": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "get all available shipping addresses from current user`s address book.",
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-response"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "get all available shipping addresses from current user`s address book.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "addItemsInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-request"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-save-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/checkout/shippingAddresses/{nickName}": {
+      "get": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "get address data by nickName of address book.",
+        "parameters": [
+          {
+            "name": "nickName",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sucess response",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-query-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/checkout/shippingOptions": {
+      "get": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "get all shipping methods related to order`s shipping address",
+        "responses": {
+          "200": {
+            "description": "sucess response",
+            "schema": {
+              "$ref": "#/definitions/shippingOptions-response"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "save selected shipping option.",
+        "responses": {
+          "200": {
+            "description": "sucess response",
+            "schema": {
+              "$ref": "#/definitions/shippingOptions-save-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/checkout/shippingOptions/saveAdditionalShippingInfo": {
+      "post": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "save additional shipping info elected shipping method.",
+        "responses": {
+          "200": {
+            "description": "sucess response",
+            "schema": {
+              "$ref": "#/definitions/saveAdditionalShippingInfo-response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/miniCart": {
+      "get": {
+        "summary": "Display mini cart detail",
+        "description": "",
+        "tags": [
+          "CART"
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/miniCartResponse"
+            }
+          }
+        }
+      }
+    },
+    "/rest/cart": {
+      "get": {
+        "summary": "Display shopping cart detail",
+        "description": "",
+        "tags": [
+          "CART"
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/cartResponse"
+            }
+          }
+        }
+      }
+    },
+    "/rest/checkout": {
+      "get": {
+        "summary": "User checkout",
+        "tags": [
+          "CART"
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/cart/items/{id}": {
+      "delete": {
+        "summary": "Remove item from cart",
+        "description": "",
+        "tags": [
+          "CART"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The commerce item id",
+            "default": "0606335"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#definitions/response"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update item quantity",
+        "description": "",
+        "tags": [
+          "CART"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "description": "The commerce item id",
+            "required": true,
+            "default": "0606335"
+          },
+          {
+            "name": "itemChangeRequest",
+            "in": "body",
+            "required": true,
+            "description": "The changed commerce item",
+            "schema": {
+              "$ref": "#/definitions/itemChangeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
+    },
+    "/rest/cart/promotions/{id}": {
+      "delete": {
+        "summary": "Remove promotion from order",
+        "tags": [
+          "CART"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The promotion code",
+            "required": true,
+            "type": "string",
+            "default": "test"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Apply promotion to order",
+        "tags": [
+          "CART"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The promotion code",
+            "required": true,
+            "type": "string",
+            "default": "test"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "shippingAddresses-request": {
+      "type": "object",
+      "properties": {
+        "HKPickup": {
+          "type": "boolean",
+          "description": "if current address is HK pickup"
+        },
+        "address": {
+          "$ref": "#/definitions/address"
+        }
+      }
+    },
+    "saveAdditionalShippingInfo-response": {
+      "type": "object",
+      "properties": {
+        "sucess": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "shippingOptions-response": {
+      "type": "object",
+      "properties": {
+        "sucess": {
+          "type": "boolean",
+          "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/shippingOptions"
+        }
+      }
+    },
+    "shippingOptions": {
+      "type": "object",
+      "properties": {
+        "shippingMethods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/shippingMethod"
+          }
+        }
+      }
+    },
+    "shippingOptions-save-response": {
+      "type": "object",
+      "properties": {
+        "sucess": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "shippingAddresses-save-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "shippingAddresses-query-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/address"
+        }
+      }
+    },
+    "shippingAddresses-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/shippingAddresses"
+        }
+      }
+    },
+    "shippingAddresses": {
+      "type": "object",
+      "properties": {
+        "defaultAddress": {
+          "type": "string",
+          "description": "the default address`s nick name, which is need to be treated as pre-selected.' "
+        },
+        "shippingAresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/address"
+          }
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "nickName": {
+          "type": "string",
+          "description": "the identify name in all address books"
+        },
+        "firstName": {
+          "type": "string",
+          "default": "mark",
+          "description": "user`s first name"
+        },
+        "lastName": {
+          "type": "string",
+          "default": "ma",
+          "description": "user`s last name"
+        },
+        "address1": {
+          "type": "string",
+          "default": "software pack zone A, 555 tianhua street",
+          "description": "detailed address info, down to street."
+        },
+        "address2": {
+          "type": "string",
+          "default": "5th building, 2nd floor",
+          "description": "additional address info."
+        },
+        "city": {
+          "type": "string",
+          "default": "chengdu",
+          "description": "city info"
+        },
+        "district": {
+          "type": "string",
+          "default": "high-tech zone",
+          "description": "district info"
+        },
+        "state": {
+          "type": "string",
+          "default": "sichuan",
+          "description": "state info"
+        },
+        "country": {
+          "type": "string",
+          "default": "CN",
+          "description": "country code"
+        },
+        "postalCode": {
+          "type": "string",
+          "default": "610000",
+          "description": "zip code of your area"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "default": "13320695121",
+          "description": "primary phone number"
+        },
+        "daytimePhoneNumber": {
+          "type": "string",
+          "default": "028-12312312",
+          "description": "secondary phone number"
+        }
+      }
+    },
+    "shippingMethod": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "the name of shipping method",
+          "default": "EMS"
+        },
+        "description": {
+          "type": "string",
+          "description": "shipping method long description, html elements included",
+          "default": "<p align=\"LEFT\">By selecting EMS (China Postal Express), your order will be delivered directly from the U.S. to China.</p>  <p align=\"LEFT\">1. As required by the Chinese Customs, you can only include one item per order for customs declaration purpose. Shipment of multiple-item order will not be accepted.</p>"
+        },
+        "shippingCost": {
+          "type": "number",
+          "description": "shipping cost",
+          "default": 25
+        },
+        "additionalField": {
+          "type": "string",
+          "description": "additional field which related to current shipping method",
+          "default": "citizenshipCode"
+        }
+      }
+    },
+    "addItem-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "miniCartResponse": {
+      "type": "object",
+      "properties": {
+        "cart": {
+          "$ref": "#/definitions/miniCartInfo"
+        },
+        "error": {
+          "$ref": "#/definitions/error"
+        }
+      }
+    },
+    "cartResponse": {
+      "type": "object",
+      "properties": {
+        "cart": {
+          "$ref": "#/definitions/cartInfo"
+        },
+        "error": {
+          "$ref": "#/definitions/error"
+        }
+      }
+    },
+    "miniCartInfo": {
+      "type": "object",
+      "properties": {
+        "estimatedTotal": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 100
+        },
+        "cartItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cartItem"
+          }
+        }
+      }
+    },
+    "cartInfo": {
+      "type": "object",
+      "properties": {
+        "youSave": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 716
+        },
+        "savePercent": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 72
+        },
+        "subTotal": {
+          "type": "number",
+          "format": "double",
+          "description": "the sub total",
+          "default": 279
+        },
+        "estimatedShipping": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 0
+        },
+        "estimatedTotal": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 279
+        },
+        "orderDiscount": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 0
+        },
+        "promotionCode": {
+          "type": "string",
+          "description": "",
+          "default": "BOGO0605247"
+        },
+        "promotionMsg": {
+          "type": "string",
+          "description": "",
+          "default": ""
+        },
+        "cartItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cartItem"
+          }
+        }
+      }
+    },
+    "cartItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "commerce item id",
+          "default": "ci34233334"
+        },
+        "model": {
+          "type": "string",
+          "description": "sku id",
+          "default": "0606335"
+        },
+        "title": {
+          "type": "string",
+          "description": "product name",
+          "default": "Men Defio"
+        },
+        "titleUrl": {
+          "type": "string",
+          "description": "product url",
+          "default": "/watches/all+brands/movado+watches+for+men+and+women/defio/0606335.pid"
+        },
+        "image": {
+          "type": "string",
+          "description": "product image",
+          "default": "/images/catalog/movado/defio/0606335_FTZ.jpg"
+        },
+        "brand": {
+          "type": "string",
+          "description": "brand name",
+          "default": "Movado"
+        },
+        "brandUrl": {
+          "type": "string",
+          "description": "brand url",
+          "default": "/watches/movado/N_dddf6045"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "long",
+          "description": "item quantity",
+          "default": 1
+        },
+        "retailPrice": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 995
+        },
+        "yourPrice": {
+          "type": "number",
+          "format": "double",
+          "description": "The item price",
+          "default": 279
+        },
+        "yourPriceDiscount": {
+          "type": "number",
+          "format": "double",
+          "description": "",
+          "default": 0
+        },
+        "itemPromotionCode": {
+          "type": "string",
+          "description": "The applied promotion code",
+          "default": ""
+        },
+        "total": {
+          "type": "number",
+          "format": "double",
+          "description": "The item total",
+          "default": 279
+        },
+        "totalSave": {
+          "type": "number",
+          "format": "double",
+          "description": "The total you saved",
+          "default": 716
+        }
+      }
+    },
+    "itemChangeRequest": {
+      "type": "object",
+      "description": "The changed commerce item",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The commerce item id",
+          "default": "c0606335"
+        },
+        "catalogRefId": {
+          "type": "string",
+          "description": "The sku id",
+          "default": "0606335"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "long",
+          "description": "The item quantity",
+          "default": 2
+        }
+      }
+    },
+    "exception": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "error code",
+          "default": "quantityInvalid"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "error message",
+          "default": "quantity is not enough"
+        }
+      }
+    },
+    "addItem-request": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/addItem"
+          }
+        }
+      }
+    },
+    "addItem": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "description": "Identifier of product",
+          "default": "R27814702",
+          "format": "string"
+        },
+        "skuId": {
+          "type": "string",
+          "description": "Identifier of sku",
+          "default": "R27814702",
+          "format": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of item that need to be add to cart",
+          "default": 1
+        }
+      }
+    },
+    "inventory-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/inventoryItem"
+        }
+      }
+    },
+    "inventoryItem": {
+      "type": "object",
+      "properties": {
+        "stock": {
+          "type": "number",
+          "description": "stock level",
+          "default": 100
+        },
+        "preorder": {
+          "type": "number",
+          "description": "stock level of pre order",
+          "default": 10
+        }
+      }
+    },
+    "success-price-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/priceItem"
+        }
+      }
+    },
+    "faliure-price-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "Error": {
+          "$ref": "#/definitions/error"
+        }
+      }
+    },
+    "priceItem": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "Currency code of current user",
+          "default": "USD"
+        },
+        "retailPrice": {
+          "description": "Retail price, this is the base price shown to users.",
+          "$ref": "#/definitions/priceDetail"
+        },
+        "ourPrice": {
+          "description": "Ashford discount price, this price owns higher priority than retail price.",
+          "$ref": "#/definitions/priceDetail"
+        },
+        "salePrice": {
+          "description": "Sale price, this is most highest priority price.",
+          "$ref": "#/definitions/priceDetail"
+        },
+        "savingPrice": {
+          "description": "saving price",
+          "$ref": "#/definitions/SaveDetail"
+        }
+      }
+    },
+    "SaveDetail": {
+      "type": "object",
+      "properties": {
+        "savingAmount": {
+          "type": "number",
+          "description": "saving price amount",
+          "default": "1,300.00"
+        },
+        "label": {
+          "type": "string",
+          "description": "saving label",
+          "default": "you save"
+        },
+        "currencyAmount": {
+          "type": "number",
+          "description": "saving price amount with currency"
+        },
+        "savingPercentage": {
+          "type": "integer",
+          "description": "saving percentage"
+        }
+      }
+    },
+    "priceDetail": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "price amount",
+          "default": "1,300.00"
+        },
+        "label": {
+          "type": "string",
+          "description": "price label, used to show the price label in front-end.",
+          "default": "CLEARANCE"
+        },
+        "currencyAmount": {
+          "type": "number",
+          "description": "price amount with currency"
+        }
+      }
+    },
+    "login-success-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "login-failure-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "error": {
+          "$ref": "#/definitions/error"
+        }
+      }
+    },
+    "reset-pwd-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "login-error": {
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "default": "401"
+        },
+        "errorMessage": {
+          "type": "string",
+          "default": "Auth failed, please check your user/pwd"
+        }
+      }
+    },
+    "logout-response": {
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "Error": {
+          "$ref": "#/definitions/error"
+        }
+      }
+    },
+    "error": {
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "fieldsError": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fieldsError"
+          }
+        }
+      }
+    },
+    "fieldsError": {
+      "properties": {
+        "property": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "NavigationMenu": {
+      "type": "object",
+      "properties": {
+        "navigation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CategoryMenu"
+          }
+        }
+      }
+    },
+    "CategoryMenu": {
+      "type": "object",
+      "description": "Root node of Top Navigation in the header",
+      "properties": {
+        "categoryName": {
+          "type": "string",
+          "description": "Category Root Node display name",
+          "default": "SHOP BY BRAND"
+        },
+        "link": {
+          "type": "string",
+          "description": "Category link url, if it is empty means it is not click-able (Will change it to SEO URL pattern)",
+          "default": "/brand-armand-nicolet/_/N-7zn"
+        },
+        "subCategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CategoryColumnMenu"
+          }
+        }
+      }
+    },
+    "CategoryColumnMenu": {
+      "type": "object",
+      "description": "Seconde level category menus",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Category display label",
+          "default": "Armand Nicolet"
+        },
+        "link": {
+          "type": "string",
+          "description": "Category link url, if empty means it is not click-able",
+          "default": ""
+        },
+        "emptyHeader": {
+          "type": "boolean",
+          "description": "Whether to show the label name",
+          "default": false
+        },
+        "cateItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubCategoryMenu"
+          }
+        }
+      }
+    },
+    "SubCategoryMenu": {
+      "type": "object",
+      "description": "Sub category menus",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Category menu display label",
+          "default": "Armand Nicolet"
+        },
+        "url": {
+          "type": "string",
+          "description": "Category link url",
+          "default": "/brand-armand-nicolet/_/N-7zn"
+        },
+        "type": {
+          "type": "string",
+          "description": "Menu type",
+          "default": "link"
+        }
+      }
+    },
+    "CategoryList": {
+      "type": "object",
+      "properties": {
+        "facetGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Facets"
+          }
+        },
+        "products": {
+          "$ref": "#/definitions/Products"
+        }
+      }
+    },
+    "Facets": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "text",
+          "description": "Facet type. E.g Range/Text"
+        },
+        "facetName": {
+          "type": "string",
+          "default": "Category",
+          "description": "Fact root name in Endeca. E.g Price/Category/Brand"
+        },
+        "facetValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FacetValue"
+          }
+        }
+      }
+    },
+    "FacetValue": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "default": "Armand Nicolet",
+          "description": "Facet display name"
+        },
+        "selected": {
+          "type": "boolean",
+          "default": true,
+          "description": "To indicate current facet is selected or not"
+        },
+        "count": {
+          "type": "integer",
+          "default": 10,
+          "description": "To indicate the num of products under this facet"
+        },
+        "actionUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Action url of this facet"
+        },
+        "lowerBound": {
+          "type": "string",
+          "default": 0,
+          "description": "lowerbound for this facet, it is usually used by Range type facet"
+        },
+        "upperBound": {
+          "type": "string",
+          "default": 10,
+          "description": "upperBound for this facet, it is usually used by Range type facet"
+        },
+        "type": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Facet image url"
+        }
+      }
+    },
+    "Products": {
+      "type": "object",
+      "description": "Products data",
+      "properties": {
+        "productCount": {
+          "type": "integer",
+          "default": 20,
+          "description": "Total product count"
+        },
+        "currentPage": {
+          "type": "integer",
+          "default": 0,
+          "description": "Current page"
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 10,
+          "description": "Record size per page"
+        },
+        "sortOptions": {
+          "type": "array",
+          "description": "Sort by options",
+          "items": {
+            "$ref": "#/definitions/sortOption"
+          }
+        },
+        "productList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        }
+      }
+    },
+    "sortOption": {
+      "type": "object",
+      "properties": {
+        "selected": {
+          "type": "boolean",
+          "description": "To indicate the current sortby option whether it is selected or not",
+          "default": false
+        },
+        "actionUrl": {
+          "type": "string",
+          "description": "Action url of the current sortby option.",
+          "default": ""
+        },
+        "label": {
+          "type": "string",
+          "description": "Sortby option display name",
+          "default": "Price: Low To High"
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "default": "/watches/armand-nicolet/m02/9641A-AG-M9140.pid",
+          "description": "Product detail page url"
+        },
+        "brandName": {
+          "type": "string",
+          "default": "Armand Nicolet",
+          "description": "Brand name"
+        },
+        "productName": {
+          "type": "string",
+          "default": "Men's M02",
+          "description": "Product name"
+        },
+        "priceCurrent": {
+          "type": "number",
+          "default": 788,
+          "description": "Current price"
+        },
+        "priceRetail": {
+          "type": "number",
+          "default": 3200,
+          "description": "Retail price"
+        },
+        "discount": {
+          "type": "number",
+          "default": 2412,
+          "description": "Discount for this product"
+        },
+        "savingPercentage": {
+          "type": "number",
+          "default": 75.375,
+          "description": "Saving percentage"
+        },
+        "salePriceLabelText": {
+          "type": "string",
+          "default": "",
+          "description": "Sale price lable displayname"
+        },
+        "retailPriceLabelText": {
+          "type": "string",
+          "default": "retail",
+          "description": "Retail price lable displayname"
+        },
+        "showVaultSold": {
+          "$ref": "#/definitions/ShowVaultSold"
+        },
+        "displaySaleAndSavingSection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show saving indicator"
+        },
+        "images": {
+          "type": "array",
+          "description": "Image urls list",
+          "items": {
+            "type": "string",
+            "default": "/images/catalog/armand-nicolet/m02/9641A-AG-M9140_FSA.jpg",
+            "description": "Relative image url"
+          }
+        }
+      }
+    },
+    "ShowVaultSold": {
+      "type": "object",
+      "description": "VIP product indictor",
+      "properties": {
+        "lable": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "ProductPage": {
+      "type": "object",
+      "properties": {
+        "productInfo": {
+          "$ref": "#/definitions/productInfo"
+        },
+        "enrichmentInfo": {
+          "$ref": "#/definitions/enrichmentInfo"
+        }
+      }
+    },
+    "shippingInfo": {
+      "type": "object",
+      "properties": {
+        "tabLabel": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        }
+      }
+    },
+    "warrantyItem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Warraty type",
+          "default": "ASHFORD’S WORRY-FREE 2 year warranty"
+        },
+        "typeDesc": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number",
+          "description": "Senquence of current item",
+          "default": 1
+        },
+        "fileDownloadMsg": {
+          "type": "string"
+        },
+        "imagePath": {
+          "type": "string",
+          "default": "/images/ashford/pdp/warranty3.png",
+          "description": "Image path"
+        }
+      }
+    },
+    "warrantyInfo": {
+      "type": "object",
+      "properties": {
+        "tabLabel": {
+          "type": "string"
+        },
+        "warrantyTitle": {
+          "type": "string"
+        },
+        "repairServicesMsg": {
+          "type": "string"
+        },
+        "warrantyItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/warrantyItem"
+          }
+        }
+      }
+    },
+    "brandStory": {
+      "type": "object",
+      "properties": {
+        "brandTitle": {
+          "type": "string"
+        },
+        "tabLabel": {
+          "type": "string"
+        },
+        "pTitle": {
+          "type": "string"
+        },
+        "brandDescription": {
+          "type": "string"
+        },
+        "brandUrl": {
+          "type": "string"
+        },
+        "catTitle": {
+          "type": "string"
+        },
+        "catDescription": {
+          "type": "string"
+        },
+        "catUrl": {
+          "type": "string"
+        },
+        "brandProductTitle": {
+          "type": "string"
+        },
+        "brandName": {
+          "type": "string"
+        },
+        "useProductDisplayName": {
+          "type": "boolean"
+        },
+        "productDisplayName": {
+          "type": "string"
+        },
+        "concatenatedProductName": {
+          "type": "string"
+        },
+        "productUrl": {
+          "type": "string"
+        },
+        "genderDisplayName": {
+          "type": "string"
+        },
+        "catName": {
+          "type": "string"
+        },
+        "productDescription": {
+          "type": "string"
+        }
+      }
+    },
+    "iteminfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "specification": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/iteminfo"
+          }
+        }
+      }
+    },
+    "detailInfo": {
+      "type": "object",
+      "properties": {
+        "tabLabel": {
+          "type": "string"
+        },
+        "hswwSize": {
+          "type": "string"
+        },
+        "sizeHeader": {
+          "type": "string"
+        },
+        "specification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/specification"
+          }
+        }
+      }
+    },
+    "enrichmentInfo": {
+      "type": "object",
+      "properties": {
+        "detailInfo": {
+          "type": "object",
+          "$ref": "#/definitions/detailInfo"
+        },
+        "brandStory": {
+          "type": "object",
+          "$ref": "#/definitions/brandStory"
+        },
+        "warrantyInfo": {
+          "type": "object",
+          "$ref": "#/definitions/warrantyInfo"
+        },
+        "shippingInfo": {
+          "type": "object",
+          "$ref": "#/definitions/shippingInfo"
+        }
+      }
+    },
+    "skuInfo": {
+      "type": "object",
+      "properties": {
+        "skuId": {
+          "type": "string"
+        },
+        "stockMsg": {
+          "type": "string"
+        },
+        "listPriceDesc": {
+          "type": "string"
+        },
+        "listPrice": {
+          "type": "string"
+        },
+        "salePriceDesc": {
+          "type": "string"
+        },
+        "salePrice": {
+          "type": "string"
+        },
+        "ourPriceDesc": {
+          "type": "string"
+        },
+        "ourPrice": {
+          "type": "string"
+        },
+        "savingsDesc": {
+          "type": "string"
+        },
+        "savingPrice": {
+          "type": "string"
+        },
+        "showSalePrice": {
+          "type": "boolean"
+        },
+        "sizeDesc": {
+          "type": "string"
+        },
+        "sizeValue": {
+          "type": "string"
+        },
+        "sizeState": {
+          "type": "string"
+        }
+      }
+    },
+    "breadcrumb": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "productInfo": {
+      "type": "object",
+      "properties": {
+        "brandName": {
+          "type": "string",
+          "description": "Product brand name",
+          "default": "Rado"
+        },
+        "brandUrl": {
+          "type": "string",
+          "description": "Brand landing page url (Will change this to SEO URL pattern)",
+          "default": "/brand-armand-nicolet/_/N-7zn"
+        },
+        "brandTitle": {
+          "type": "string",
+          "description": "brand display title",
+          "default": "See Rado Watches"
+        },
+        "selectedSkuId": {
+          "type": "string",
+          "description": "Current selected SKU",
+          "default": "R27814702"
+        },
+        "productUrl": {
+          "type": "string",
+          "description": "product detail page url",
+          "default": "/watches/rado/rado-true/rado-true-jubile/R27814702.pid"
+        },
+        "productName": {
+          "type": "string",
+          "description": "Product display name",
+          "default": "Rado Men's Rado True Jubile Watch"
+        },
+        "productType": {
+          "type": "string",
+          "description": "Product type To-do"
+        },
+        "productDescription": {
+          "type": "string",
+          "description": "Product description",
+          "default": "Rado, Rado True Jubile, Men's Watch, Ceramic Case, Ceramic Bracelet, Swiss Quartz (Battery-Powered), R27814702"
+        },
+        "productMediaUrl": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "productZoomUrl": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "concatenatedProductName": {
+          "type": "string",
+          "default": "Rado Men's Rado True Jubile Watch",
+          "description": "Short product name"
+        },
+        "productLargeUrl": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "productLargeZoomURL": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "isClearance": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "warrantyItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/warrantyItem"
+          }
+        },
+        "showWarrantyDesc": {
+          "type": "boolean",
+          "description": "Whether to show warranty description",
+          "default": false
+        },
+        "skuInfos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/skuInfo"
+          }
+        },
+        "sizeLabel": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "selectedSize": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "sizeChartLabel": {
+          "type": "string",
+          "description": "To-do"
+        },
+        "sizeChartImgUrl": {
+          "type": "string",
+          "description": "To-do"
+        }
+      }
+    }
+  }
+}
