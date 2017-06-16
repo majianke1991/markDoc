@@ -745,10 +745,6 @@
     "shippingAddresses": {
       "type": "object",
       "properties": {
-        "defaultAddress": {
-          "type": "string",
-          "description": "the default address`s nick name, which is need to be treated as pre-selected.' "
-        },
         "shippingAresses": {
           "type": "array",
           "items": {
@@ -762,6 +758,7 @@
       "properties": {
         "nickName": {
           "type": "string",
+          "default": "shipAdr_one",
           "description": "the identify name in all address books"
         },
         "firstName": {
@@ -818,6 +815,10 @@
           "type": "string",
           "default": "028-12312312",
           "description": "secondary phone number"
+        },
+        "defaultAddress": {
+          "type": "boolean",
+          "default": true
         }
       }
     },
