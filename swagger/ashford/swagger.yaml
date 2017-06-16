@@ -455,6 +455,11 @@ definitions:
       HKPickup:
         type: boolean
         description: if current address is HK pickup
+      nickName:
+        type: string
+        description: >-
+          if current operation is saving existed shipping address, this field is
+          required
       address:
         $ref: '#/definitions/address'
   saveAdditionalShippingInfo-response:
