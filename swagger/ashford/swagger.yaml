@@ -268,7 +268,7 @@ paths:
       consumes:
         - application/json
       parameters:
-        - name: addItemsInfo
+        - name: createShippingAddressInfo
           in: body
           schema:
             $ref: '#/definitions/shippingAddresses-request'

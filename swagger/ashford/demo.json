@@ -371,7 +371,7 @@
         ],
         "parameters": [
           {
-            "name": "addItemsInfo",
+            "name": "createShippingAddressInfo",
             "in": "body",
             "schema": {
               "$ref": "#/definitions/shippingAddresses-request"
