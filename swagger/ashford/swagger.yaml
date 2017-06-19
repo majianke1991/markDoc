@@ -330,10 +330,16 @@ paths:
           description: sucess response
           schema:
             $ref: '#/definitions/shippingOptions-response'
+  '/rest/checkout/shippingOptions/{shippingMethod}':
     post:
       tags:
         - CHECKOUT
       description: save selected shipping option.
+      parameters:
+        - name: shippingMethod
+          in: path
+          required: true
+          type: string
       responses:
         '200':
           description: sucess response
@@ -344,6 +350,11 @@ paths:
       tags:
         - CHECKOUT
       description: save additional shipping info elected shipping method.
+      parameters:
+        - name: citizenshipCode
+          in: query
+          required: true
+          type: string
       responses:
         '200':
           description: sucess response
