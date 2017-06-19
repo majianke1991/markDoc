@@ -363,7 +363,8 @@
         "tags": [
           "CHECKOUT"
         ],
-        "description": "create shipping addresses.",
+        "summary": "Create shipping addresses",
+        "description": "Create shipping addresses.",
         "produces": [
           "application/json"
         ],
@@ -394,8 +395,8 @@
         "tags": [
           "CHECKOUT"
         ],
-        "summary": "get address data by nickName",
-        "description": "get address data by nickName of address book.",
+        "summary": "Get address data by nickName",
+        "description": "Get address data by nickName of address book.",
         "parameters": [
           {
             "name": "nickName",
@@ -418,8 +419,8 @@
         "tags": [
           "CHECKOUT"
         ],
-        "summary": "update shipping address",
-        "description": "update shipping addresses.",
+        "summary": "Update shipping address",
+        "description": "Update shipping addresses.",
         "produces": [
           "application/json"
         ],
@@ -457,8 +458,8 @@
         "tags": [
           "CHECKOUT"
         ],
-        "summary": "get all shipping methods",
-        "description": "get all shipping methods related to order`s shipping address",
+        "summary": "Get all shipping methods",
+        "description": "Get all shipping methods related to order`s shipping address",
         "responses": {
           "200": {
             "description": "sucess response",
@@ -474,8 +475,8 @@
         "tags": [
           "CHECKOUT"
         ],
-        "summary": "save shipping option.",
-        "description": "save selected shipping option.",
+        "summary": "Save shipping option.",
+        "description": "Save selected shipping option.",
         "parameters": [
           {
             "name": "shippingMethod",
@@ -499,8 +500,8 @@
         "tags": [
           "CHECKOUT"
         ],
-        "summary": "save additional shipping info",
-        "description": "save additional shipping info.",
+        "summary": "Save additional shipping info",
+        "description": "Save additional shipping info.",
         "parameters": [
           {
             "name": "citizenshipCode",
