@@ -343,43 +343,12 @@
         }
       }
     },
-    "/rest/orders/addItemToCart": {
-      "post": {
-        "tags": [
-          "ORDER"
-        ],
-        "description": "add sku(s) to cart. This API support add one item into cart also supports the advanced features of add multiple items into cart.",
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "addItemsInfo",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/addItem-request"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success response",
-            "schema": {
-              "$ref": "#/definitions/addItem-response"
-            }
-          }
-        }
-      }
-    },
     "/rest/checkout/shippingAddresses": {
       "get": {
         "tags": [
           "CHECKOUT"
         ],
-        "description": "get all available shipping addresses from current user`s address book.",
+        "description": "Get all available shipping addresses for current user.",
         "responses": {
           "200": {
             "description": "success response",
@@ -389,11 +358,11 @@
           }
         }
       },
-      "post": {
+      "put": {
         "tags": [
           "CHECKOUT"
         ],
-        "description": "update shipping addresses.",
+        "description": "create shipping addresses.",
         "produces": [
           "application/json"
         ],
@@ -430,6 +399,7 @@
             "name": "nickName",
             "in": "path",
             "type": "string",
+            "description": "Retrieve specified shipping address according to nick name for logged in users. For anonymous user, value should always be default",
             "required": true
           }
         ],
@@ -438,6 +408,42 @@
             "description": "sucess response",
             "schema": {
               "$ref": "#/definitions/shippingAddresses-query-response"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CHECKOUT"
+        ],
+        "description": "update shipping addresses.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "shippingAddressInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-request"
+            }
+          },
+          {
+            "name": "nickName",
+            "in": "path",
+            "type": "string",
+            "description": "Update specified shipping address according to nick name for logged in users. For anonymous user, value should always be default",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-save-response"
             }
           }
         }
@@ -492,7 +498,7 @@
     "/rest/miniCart": {
       "get": {
         "summary": "Display mini cart detail",
-        "description": "",
+        "description": "Get mini cart detail info, no specific parameter required but user cookies",
         "tags": [
           "CART"
         ],
@@ -509,7 +515,7 @@
     "/rest/cart": {
       "get": {
         "summary": "Display shopping cart detail",
-        "description": "",
+        "description": "Display shopping cart detail, no specific parameter require but cookies",
         "tags": [
           "CART"
         ],
@@ -521,11 +527,68 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "Add item(s) to cart",
+        "tags": [
+          "CART"
+        ],
+        "description": "add sku(s) to cart. This API support add one item into cart also supports the advanced features of add multiple items into cart.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "addItemsInfo",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/addItem-request"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/addItem-response"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update item quantity",
+        "description": "",
+        "tags": [
+          "CART"
+        ],
+        "parameters": [
+          {
+            "name": "cartItems",
+            "in": "body",
+            "required": true,
+            "description": "The changed commerce item",
+            "schema": {
+              "$ref": "#/definitions/itemChangeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response",
+            "schema": {
+              "$ref": "#/definitions/response"
+            }
+          }
+        }
       }
     },
     "/rest/checkout": {
       "get": {
-        "summary": "User checkout",
+        "summary": "Checkout the order",
+        "description": "No specific parameter required but cookies.",
         "tags": [
           "CART"
         ],
@@ -541,7 +604,7 @@
     },
     "/rest/cart/items/{id}": {
       "delete": {
-        "summary": "Remove item from cart",
+        "summary": "Remove commerce item from cart",
         "description": "",
         "tags": [
           "CART"
@@ -564,40 +627,6 @@
             }
           }
         }
-      },
-      "put": {
-        "summary": "Update item quantity",
-        "description": "",
-        "tags": [
-          "CART"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "type": "string",
-            "description": "The commerce item id",
-            "required": true,
-            "default": "0606335"
-          },
-          {
-            "name": "itemChangeRequest",
-            "in": "body",
-            "required": true,
-            "description": "The changed commerce item",
-            "schema": {
-              "$ref": "#/definitions/itemChangeRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success response",
-            "schema": {
-              "$ref": "#/definitions/response"
-            }
-          }
-        }
       }
     },
     "/rest/cart/promotions/{id}": {
@@ -613,7 +642,7 @@
             "description": "The promotion code",
             "required": true,
             "type": "string",
-            "default": "test"
+            "default": "co002"
           }
         ],
         "responses": {
@@ -626,7 +655,7 @@
         }
       },
       "put": {
-        "summary": "Apply promotion to order",
+        "summary": "Apply promotion coupon to order",
         "tags": [
           "CART"
         ],
@@ -634,10 +663,10 @@
           {
             "name": "id",
             "in": "path",
-            "description": "The promotion code",
+            "description": "The promotion coupon code",
             "required": true,
             "type": "string",
-            "default": "test"
+            "default": "co002"
           }
         ],
         "responses": {
@@ -657,9 +686,6 @@
       "properties": {
         "cart": {
           "$ref": "#/definitions/miniCart"
-        },
-        "error": {
-          "$ref": "#/definitions/error"
         }
       }
     },
@@ -668,9 +694,6 @@
       "properties": {
         "cart": {
           "$ref": "#/definitions/cart"
-        },
-        "error": {
-          "$ref": "#/definitions/error"
         }
       }
     },
@@ -715,6 +738,32 @@
         },
         "price": {
           "$ref": "#/definitions/orderPrice"
+        },
+        "promotions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/promotion"
+          }
+        }
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "properties": {
+        "promotionCode": {
+          "type": "string",
+          "description": "The applied promotion code",
+          "default": ""
+        },
+        "promotionDescription": {
+          "type": "string",
+          "description": "promotion description",
+          "default": "buy 0309198 get R28886162"
+        },
+        "promotionType": {
+          "type": "integer",
+          "description": "the digital '0' -> item discount, 1 -> Shipping Discount 2 -> Order Discount",
+          "default": 2
         }
       }
     },
@@ -723,12 +772,12 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "The commerce item id",
+          "description": "The commerce item id (ATG back-end item id)",
           "default": "ci34233334"
         },
         "catalogRefId": {
           "type": "string",
-          "description": "sku id",
+          "description": "SKU id",
           "default": "0606335"
         },
         "productId": {
@@ -738,7 +787,7 @@
         },
         "productDisplayName": {
           "type": "string",
-          "description": "product name",
+          "description": "product display name",
           "default": "Men Defio"
         },
         "productURL": {
@@ -748,18 +797,18 @@
         },
         "productImage": {
           "type": "string",
-          "description": "product image",
+          "description": "product thumbnail image",
           "default": "/images/catalog/movado/defio/0606335_FTZ.jpg"
         },
         "brand": {
           "type": "string",
-          "description": "brand name",
+          "description": "brand name for current SKU",
           "default": "Movado"
         },
         "brandURL": {
           "type": "string",
-          "description": "brand url",
-          "default": "/watches/movado/N_dddf6045"
+          "description": "brand landing page url",
+          "default": "/watches/movado/_/N_dddf6045"
         },
         "quantity": {
           "type": "number",
@@ -779,7 +828,7 @@
         "amount": {
           "type": "number",
           "format": "double",
-          "description": "amount",
+          "description": "Item total amount",
           "default": 972
         },
         "quantityDiscounted": {
@@ -795,7 +844,7 @@
         "rawTotalPrice": {
           "type": "number",
           "format": "double",
-          "description": "rawTotalPrice",
+          "description": "Raw totoal price without discount",
           "default": 1000
         },
         "currencyCode": {
@@ -814,62 +863,23 @@
           "format": "double",
           "description": "sale price",
           "default": 972
-        },
-        "currentPriceDetailsSorted": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/itemPriceDetail"
-          }
-        }
-      }
-    },
-    "itemPriceDetail": {
-      "type": "object",
-      "properties": {
-        "amount": {
-          "type": "number",
-          "format": "double",
-          "description": "price amount",
-          "default": 972
-        },
-        "currencyCode": {
-          "type": "string",
-          "description": "currency Code",
-          "default": "USD"
-        },
-        "discounted": {
-          "type": "boolean",
-          "description": "whether it is discounted",
-          "default": true
-        },
-        "quantity": {
-          "type": "number",
-          "format": "long",
-          "description": "quantity",
-          "default": 1
-        },
-        "detailedUnitPrice": {
-          "type": "number",
-          "format": "double",
-          "description": "detailed unit price",
-          "default": 1000
         }
       }
     },
     "orderPrice": {
       "type": "object",
-      "description": "The order price detail",
+      "description": "The price detail of current order",
       "properties": {
         "amount": {
           "type": "number",
           "format": "double",
-          "description": "amount",
+          "description": "order amount without tax and shipping",
           "default": 972
         },
         "total": {
           "type": "number",
           "format": "double",
-          "description": "amount",
+          "description": "order total amount with tax and shipping",
           "default": 972
         },
         "shipping": {
@@ -891,19 +901,19 @@
         },
         "discounted": {
           "type": "boolean",
-          "description": "whether it is discounted",
+          "description": "To mark the current order whether it is discounted",
           "default": true
         },
         "rawSubtotal": {
           "type": "number",
           "format": "double",
-          "description": "subtotal",
+          "description": "subtotal without discounted.",
           "default": 1000
         },
         "discountAmount": {
           "type": "number",
           "format": "double",
-          "description": "amount",
+          "description": "Discount amount for current order.",
           "default": 28
         }
       }
@@ -912,20 +922,26 @@
       "type": "object",
       "description": "The changed commerce item",
       "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/itemUpdate"
+          }
+        }
+      }
+    },
+    "itemUpdate": {
+      "type": "object",
+      "properties": {
         "commerceId": {
           "type": "string",
           "description": "The commerce item id",
           "default": "c0606335"
         },
-        "catalogRefId": {
-          "type": "string",
-          "description": "The sku id",
-          "default": "0606335"
-        },
         "quantity": {
           "type": "number",
           "format": "long",
-          "description": "The item quantity",
+          "description": "Update item quantity",
           "default": 2
         }
       }
@@ -936,10 +952,6 @@
         "HKPickup": {
           "type": "boolean",
           "description": "if current address is HK pickup"
-        },
-        "nickName": {
-          "type": "string",
-          "description": "if current operation is saving existed shipping address, this field is required"
         },
         "address": {
           "$ref": "#/definitions/address"
@@ -1356,9 +1368,6 @@
       "properties": {
         "success": {
           "type": "boolean"
-        },
-        "Error": {
-          "$ref": "#/definitions/error"
         }
       }
     },

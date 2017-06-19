@@ -249,41 +249,20 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/inventory-response'
-  /rest/orders/addItemToCart:
-    post:
-      tags:
-        - ORDER
-      description: >-
-        add sku(s) to cart. This API support add one item into cart also
-        supports the advanced features of add multiple items into cart.
-      produces:
-        - application/json
-      consumes:
-        - application/json
-      parameters:
-        - name: addItemsInfo
-          in: body
-          schema:
-            $ref: '#/definitions/addItem-request'
-      responses:
-        '200':
-          description: success response
-          schema:
-            $ref: '#/definitions/addItem-response'
   /rest/checkout/shippingAddresses:
     get:
       tags:
         - CHECKOUT
-      description: get all available shipping addresses from current user`s address book.
+      description: Get all available shipping addresses for current user.
       responses:
         '200':
           description: success response
           schema:
             $ref: '#/definitions/shippingAddresses-response'
-    post:
+    put:
       tags:
         - CHECKOUT
-      description: get all available shipping addresses from current user`s address book.
+      description: create shipping addresses.
       produces:
         - application/json
       consumes:
@@ -307,12 +286,40 @@ paths:
         - name: nickName
           in: path
           type: string
+          description: >-
+            Retrieve specified shipping address according to nick name for
+            logged in users. For anonymous user, value should always be default
           required: true
       responses:
         '200':
           description: sucess response
           schema:
             $ref: '#/definitions/shippingAddresses-query-response'
+    post:
+      tags:
+        - CHECKOUT
+      description: update shipping addresses.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: shippingAddressInfo
+          in: body
+          schema:
+            $ref: '#/definitions/shippingAddresses-request'
+        - name: nickName
+          in: path
+          type: string
+          description: >-
+            Update specified shipping address according to nick name for logged
+            in users. For anonymous user, value should always be default
+          required: true
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/shippingAddresses-save-response'
   /rest/checkout/shippingOptions:
     get:
       tags:
@@ -345,7 +352,9 @@ paths:
   /rest/miniCart:
     get:
       summary: Display mini cart detail
-      description: ''
+      description: >-
+        Get mini cart detail info, no specific parameter required but user
+        cookies
       tags:
         - CART
       responses:
@@ -356,7 +365,7 @@ paths:
   /rest/cart:
     get:
       summary: Display shopping cart detail
-      description: ''
+      description: 'Display shopping cart detail, no specific parameter require but cookies'
       tags:
         - CART
       responses:
@@ -364,9 +373,48 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/cartResponse'
+    post:
+      summary: Add item(s) to cart
+      tags:
+        - CART
+      description: >-
+        add sku(s) to cart. This API support add one item into cart also
+        supports the advanced features of add multiple items into cart.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: addItemsInfo
+          in: body
+          schema:
+            $ref: '#/definitions/addItem-request'
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/addItem-response'
+    put:
+      summary: Update item quantity
+      description: ''
+      tags:
+        - CART
+      parameters:
+        - name: cartItems
+          in: body
+          required: true
+          description: The changed commerce item
+          schema:
+            $ref: '#/definitions/itemChangeRequest'
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/response'
   /rest/checkout:
     get:
-      summary: User checkout
+      summary: Checkout the order
+      description: No specific parameter required but cookies.
       tags:
         - CART
       responses:
@@ -376,7 +424,7 @@ paths:
             $ref: '#/definitions/response'
   '/rest/cart/items/{id}':
     delete:
-      summary: Remove item from cart
+      summary: Remove commerce item from cart
       description: ''
       tags:
         - CART
@@ -392,29 +440,6 @@ paths:
           description: success response
           schema:
             $ref: '#definitions/response'
-    put:
-      summary: Update item quantity
-      description: ''
-      tags:
-        - CART
-      parameters:
-        - name: id
-          in: path
-          type: string
-          description: The commerce item id
-          required: true
-          default: '0606335'
-        - name: itemChangeRequest
-          in: body
-          required: true
-          description: The changed commerce item
-          schema:
-            $ref: '#/definitions/itemChangeRequest'
-      responses:
-        '200':
-          description: success response
-          schema:
-            $ref: '#/definitions/response'
   '/rest/cart/promotions/{id}':
     delete:
       summary: Remove promotion from order
@@ -426,40 +451,237 @@ paths:
           description: The promotion code
           required: true
           type: string
-          default: test
+          default: co002
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/response'
     put:
-      summary: Apply promotion to order
+      summary: Apply promotion coupon to order
       tags:
         - CART
       parameters:
         - name: id
           in: path
-          description: The promotion code
+          description: The promotion coupon code
           required: true
           type: string
-          default: test
+          default: co002
       responses:
         '200':
           description: success response
           schema:
             $ref: '#/definitions/response'
 definitions:
+  miniCartResponse:
+    type: object
+    properties:
+      cart:
+        $ref: '#/definitions/miniCart'
+  cartResponse:
+    type: object
+    properties:
+      cart:
+        $ref: '#/definitions/cart'
+  miniCart:
+    type: object
+    properties:
+      price:
+        $ref: '#/definitions/orderPrice'
+      commerceItems:
+        type: array
+        items:
+          $ref: '#/definitions/commerceItem'
+  cart:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The order id
+        default: o140002
+      profileId:
+        type: string
+        description: The profile id
+        default: pf230000
+      totalCommerceItemCount:
+        type: number
+        format: long
+        description: The total of commerce item
+        default: 1
+      commerceItems:
+        type: array
+        items:
+          $ref: '#/definitions/commerceItem'
+      price:
+        $ref: '#/definitions/orderPrice'
+      promotions:
+        type: array
+        items:
+          $ref: '#/definitions/promotion'
+  promotion:
+    type: object
+    properties:
+      promotionCode:
+        type: string
+        description: The applied promotion code
+        default: ''
+      promotionDescription:
+        type: string
+        description: promotion description
+        default: buy 0309198 get R28886162
+      promotionType:
+        type: integer
+        description: >-
+          the digital '0' -> item discount, 1 -> Shipping Discount 2 -> Order
+          Discount
+        default: 2
+  commerceItem:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The commerce item id (ATG back-end item id)
+        default: ci34233334
+      catalogRefId:
+        type: string
+        description: SKU id
+        default: '0606335'
+      productId:
+        type: string
+        description: product id
+        default: '0606335'
+      productDisplayName:
+        type: string
+        description: product display name
+        default: Men Defio
+      productURL:
+        type: string
+        description: product url
+        default: /watches/all+brands/movado+watches+for+men+and+women/defio/0606335.pid
+      productImage:
+        type: string
+        description: product thumbnail image
+        default: /images/catalog/movado/defio/0606335_FTZ.jpg
+      brand:
+        type: string
+        description: brand name for current SKU
+        default: Movado
+      brandURL:
+        type: string
+        description: brand landing page url
+        default: /watches/movado/_/N_dddf6045
+      quantity:
+        type: number
+        format: long
+        description: item quantity
+        default: 1
+      price:
+        $ref: '#/definitions/itemPrice'
+  itemPrice:
+    type: object
+    description: The item price info
+    properties:
+      amount:
+        type: number
+        format: double
+        description: Item total amount
+        default: 972
+      quantityDiscounted:
+        type: integer
+        description: The quantity discounted
+        default: 1
+      discounted:
+        type: boolean
+        description: whether it is discounted
+        default: true
+      rawTotalPrice:
+        type: number
+        format: double
+        description: Raw totoal price without discount
+        default: 1000
+      currencyCode:
+        type: string
+        description: currency code
+        default: USD
+      listPrice:
+        type: number
+        format: double
+        description: list price
+        default: 1000
+      salePrice:
+        type: number
+        format: double
+        description: sale price
+        default: 972
+  orderPrice:
+    type: object
+    description: The price detail of current order
+    properties:
+      amount:
+        type: number
+        format: double
+        description: order amount without tax and shipping
+        default: 972
+      total:
+        type: number
+        format: double
+        description: order total amount with tax and shipping
+        default: 972
+      shipping:
+        type: number
+        format: double
+        description: shipping cost
+        default: 0
+      tax:
+        type: number
+        format: double
+        description: tax cost
+        default: 0
+      currencyCode:
+        type: string
+        description: currency Code
+        default: USD
+      discounted:
+        type: boolean
+        description: To mark the current order whether it is discounted
+        default: true
+      rawSubtotal:
+        type: number
+        format: double
+        description: subtotal without discounted.
+        default: 1000
+      discountAmount:
+        type: number
+        format: double
+        description: Discount amount for current order.
+        default: 28
+  itemChangeRequest:
+    type: object
+    description: The changed commerce item
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/itemUpdate'
+  itemUpdate:
+    type: object
+    properties:
+      commerceId:
+        type: string
+        description: The commerce item id
+        default: c0606335
+      quantity:
+        type: number
+        format: long
+        description: Update item quantity
+        default: 2
   shippingAddresses-request:
     type: object
     properties:
       HKPickup:
         type: boolean
         description: if current address is HK pickup
-      nickName:
-        type: string
-        description: >-
-          if current operation is saving existed shipping address, this field is
-          required
       address:
         $ref: '#/definitions/address'
   saveAdditionalShippingInfo-response:
@@ -602,159 +824,6 @@ definitions:
       success:
         type: boolean
         default: true
-  miniCartResponse:
-    type: object
-    properties:
-      cart:
-        $ref: '#/definitions/miniCartInfo'
-      error:
-        $ref: '#/definitions/error'
-  cartResponse:
-    type: object
-    properties:
-      cart:
-        $ref: '#/definitions/cartInfo'
-      error:
-        $ref: '#/definitions/error'
-  miniCartInfo:
-    type: object
-    properties:
-      estimatedTotal:
-        type: number
-        format: double
-        description: ''
-        default: 100
-      cartItems:
-        type: array
-        items:
-          $ref: '#/definitions/cartItem'
-  cartInfo:
-    type: object
-    properties:
-      youSave:
-        type: number
-        format: double
-        description: ''
-        default: 716
-      savePercent:
-        type: number
-        format: double
-        description: ''
-        default: 72
-      subTotal:
-        type: number
-        format: double
-        description: the sub total
-        default: 279
-      estimatedShipping:
-        type: number
-        format: double
-        description: ''
-        default: 0
-      estimatedTotal:
-        type: number
-        format: double
-        description: ''
-        default: 279
-      orderDiscount:
-        type: number
-        format: double
-        description: ''
-        default: 0
-      promotionCode:
-        type: string
-        description: ''
-        default: BOGO0605247
-      promotionMsg:
-        type: string
-        description: ''
-        default: ''
-      cartItems:
-        type: array
-        items:
-          $ref: '#/definitions/cartItem'
-  cartItem:
-    type: object
-    properties:
-      id:
-        type: string
-        description: commerce item id
-        default: ci34233334
-      model:
-        type: string
-        description: sku id
-        default: '0606335'
-      title:
-        type: string
-        description: product name
-        default: Men Defio
-      titleUrl:
-        type: string
-        description: product url
-        default: /watches/all+brands/movado+watches+for+men+and+women/defio/0606335.pid
-      image:
-        type: string
-        description: product image
-        default: /images/catalog/movado/defio/0606335_FTZ.jpg
-      brand:
-        type: string
-        description: brand name
-        default: Movado
-      brandUrl:
-        type: string
-        description: brand url
-        default: /watches/movado/N_dddf6045
-      quantity:
-        type: number
-        format: long
-        description: item quantity
-        default: 1
-      retailPrice:
-        type: number
-        format: double
-        description: ''
-        default: 995
-      yourPrice:
-        type: number
-        format: double
-        description: The item price
-        default: 279
-      yourPriceDiscount:
-        type: number
-        format: double
-        description: ''
-        default: 0
-      itemPromotionCode:
-        type: string
-        description: The applied promotion code
-        default: ''
-      total:
-        type: number
-        format: double
-        description: The item total
-        default: 279
-      totalSave:
-        type: number
-        format: double
-        description: The total you saved
-        default: 716
-  itemChangeRequest:
-    type: object
-    description: The changed commerce item
-    properties:
-      id:
-        type: string
-        description: The commerce item id
-        default: c0606335
-      catalogRefId:
-        type: string
-        description: The sku id
-        default: '0606335'
-      quantity:
-        type: number
-        format: long
-        description: The item quantity
-        default: 2
   exception:
     type: object
     properties:
@@ -915,8 +984,6 @@ definitions:
     properties:
       success:
         type: boolean
-      Error:
-        $ref: '#/definitions/error'
   error:
     properties:
       errorCode:
