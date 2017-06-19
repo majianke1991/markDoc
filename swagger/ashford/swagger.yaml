@@ -253,6 +253,7 @@ paths:
     get:
       tags:
         - CHECKOUT
+      summary: Get all available shipping addresses
       description: Get all available shipping addresses for current user.
       responses:
         '200':
@@ -281,6 +282,7 @@ paths:
     get:
       tags:
         - CHECKOUT
+      summary: get address data by nickName
       description: get address data by nickName of address book.
       parameters:
         - name: nickName
@@ -298,6 +300,7 @@ paths:
     post:
       tags:
         - CHECKOUT
+      summary: update shipping address
       description: update shipping addresses.
       produces:
         - application/json
@@ -324,6 +327,7 @@ paths:
     get:
       tags:
         - CHECKOUT
+      summary: get all shipping methods
       description: get all shipping methods related to order`s shipping address
       responses:
         '200':
@@ -334,6 +338,7 @@ paths:
     post:
       tags:
         - CHECKOUT
+      summary: save shipping option.
       description: save selected shipping option.
       parameters:
         - name: shippingMethod
@@ -349,7 +354,8 @@ paths:
     post:
       tags:
         - CHECKOUT
-      description: save additional shipping info elected shipping method.
+      summary: save additional shipping info
+      description: save additional shipping info.
       parameters:
         - name: citizenshipCode
           in: query
@@ -526,6 +532,8 @@ definitions:
           $ref: '#/definitions/commerceItem'
       price:
         $ref: '#/definitions/orderPrice'
+      convertedPrice:
+        $ref: '#/definitions/orderPrice'
       promotions:
         type: array
         items:
@@ -588,6 +596,8 @@ definitions:
         description: item quantity
         default: 1
       price:
+        $ref: '#/definitions/itemPrice'
+      convertedPrice:
         $ref: '#/definitions/itemPrice'
   itemPrice:
     type: object
@@ -712,6 +722,10 @@ definitions:
   shippingOptions:
     type: object
     properties:
+      currency:
+        type: string
+        description: Currency code of current user
+        default: USD
       shippingMethods:
         type: array
         items:
@@ -812,19 +826,9 @@ definitions:
         type: string
         description: the name of shipping method
         default: EMS
-      description:
-        type: string
-        description: 'shipping method long description, html elements included'
-        default: >-
-          <p align="LEFT">By selecting EMS (China Postal Express), your order
-          will be delivered directly from the U.S. to China.</p>  <p
-          align="LEFT">1. As required by the Chinese Customs, you can only
-          include one item per order for customs declaration purpose. Shipment
-          of multiple-item order will not be accepted.</p>
       shippingCost:
-        type: number
-        description: shipping cost
-        default: 25
+        description: The price of current shipping method
+        $ref: '#/definitions/priceDetail'
       additionalField:
         type: string
         description: additional field which related to current shipping method
