@@ -299,7 +299,9 @@ paths:
       tags:
         - CHECKOUT
       summary: Get address data by nickName
-      description: Get address data by nickName of address book.
+      description: >-
+        when landing shipping edit page, get address data by nickName of address
+        book.  For anonymous user, please put default for nickName
       parameters:
         - name: nickName
           in: path
@@ -318,11 +320,13 @@ paths:
           description: sucess response
           schema:
             $ref: '#/definitions/shippingAddresses-query-response'
-    post:
+    put:
       tags:
         - CHECKOUT
       summary: Update shipping address
-      description: Update shipping addresses.
+      description: >-
+        when saving or selecting existed shipping address. For anonymous user,
+        please put default for nickName
       produces:
         - application/json
       consumes:
@@ -358,7 +362,9 @@ paths:
       tags:
         - CHECKOUT
       summary: Get all shipping methods
-      description: Get all shipping methods related to order`s shipping address
+      description: >-
+        After updating, selecting or creating shipping, Get all shipping methods
+        related to order`s shipping address
       parameters:
         - name: orderId
           in: path
@@ -375,7 +381,7 @@ paths:
       tags:
         - CHECKOUT
       summary: Save shipping option.
-      description: Save selected shipping option.
+      description: ' When saving selected shipping option.'
       parameters:
         - name: shippingMethod
           in: path
@@ -396,7 +402,7 @@ paths:
       tags:
         - CHECKOUT
       summary: Save additional shipping info
-      description: Save additional shipping info.
+      description: When saving additional shipping info.
       parameters:
         - name: citizenshipCode
           in: query
@@ -425,6 +431,10 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/miniCartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
   /rest/cart:
     get:
       summary: Return shopping cart detail
@@ -436,6 +446,10 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
     post:
       summary: Add item(s) to cart
       tags:
@@ -457,6 +471,10 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
     put:
       summary: Update item quantity
       description: ''
@@ -474,6 +492,10 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/response'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
   /rest/checkout:
     get:
       summary: Checkout the order
@@ -485,6 +507,10 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
   '/rest/cart/items/{id}':
     delete:
       summary: Remove commerce item from cart
@@ -502,7 +528,11 @@ paths:
         '200':
           description: success response
           schema:
-            $ref: '#definitions/cartResponse'
+            $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
   '/rest/cart/promotions/{id}':
     delete:
       summary: Remove promotion from order
@@ -520,6 +550,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
     put:
       summary: Apply promotion to order
       tags:
@@ -536,6 +570,10 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
 definitions:
   miniCartResponse:
     type: object
@@ -937,16 +975,37 @@ definitions:
       shippingCost:
         description: The price of current shipping method
         $ref: '#/definitions/priceDetail'
+      convertedshippingCost:
+        description: The converted price of current shipping method
+        $ref: '#/definitions/priceDetail'
       additionalField:
         type: string
         description: additional fields required by current shipping method
-        default: >-
-          citizenshipCode addItem-response: type: object properties: success:
-          type: boolean default: true exception: type: object properties:
-          errorCode: type: string description: error code default: invalidState
-          errorMessage: type: string description: error message default: state
-          is not exist addItem-request: type: object properties: items: type:
-          array items: $ref: 
+        default: citizenshipCode
+  addItem-response:
+    type: object
+    properties:
+      success:
+        type: boolean
+        default: true
+  exception:
+    type: object
+    properties:
+      errorCode:
+        type: string
+        description: error code
+        default: errorCode
+      errorMessage:
+        type: string
+        description: error message
+        default: error message
+  addItem-request:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/addItem'
   addItem:
     type: object
     properties:
@@ -1048,6 +1107,10 @@ definitions:
         type: string
         description: 'price label, used to show the price label in front-end.'
         default: CLEARANCE
+      currency:
+        type: string
+        description: 'currency code '
+        default: USD
       currencyAmount:
         type: number
         description: price amount with currency
