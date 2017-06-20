@@ -343,13 +343,22 @@
         }
       }
     },
-    "/rest/checkout/shippingAddresses": {
+    "/rest/checkout/{orderId}/shippingAddresses": {
       "get": {
         "tags": [
           "CHECKOUT"
         ],
         "summary": "Get all available shipping addresses",
-        "description": "Get all available shipping addresses for current user.",
+        "description": "-> 'This API is only for logged users. And suits for below scenarios 1. After API /cart/checkout, landing to checkout page and require data for shipping addresses display'",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "order id"
+          }
+        ],
         "responses": {
           "200": {
             "description": "success response",
@@ -359,12 +368,12 @@
           }
         }
       },
-      "put": {
+      "post": {
         "tags": [
           "CHECKOUT"
         ],
         "summary": "Create shipping addresses",
-        "description": "Create shipping addresses.",
+        "description": "-> 'Create shipping addresses. And suits for below scenarios 1. User save a new shipping address'",
         "produces": [
           "application/json"
         ],
@@ -386,11 +395,17 @@
             "schema": {
               "$ref": "#/definitions/shippingAddresses-save-response"
             }
+          },
+          "422": {
+            "description": "invalidate fields detected",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-save-error-response"
+            }
           }
         }
       }
     },
-    "/rest/checkout/shippingAddresses/{nickName}": {
+    "/rest/checkout/{orderId}/shippingAddresses/{nickName}": {
       "get": {
         "tags": [
           "CHECKOUT"
@@ -404,6 +419,13 @@
             "type": "string",
             "description": "Retrieve specified shipping address according to nick name for logged in users. For anonymous user, value should always be default",
             "required": true
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "order id"
           }
         ],
         "responses": {
@@ -441,6 +463,13 @@
             "type": "string",
             "description": "Update specified shipping address according to nick name for logged in users. For anonymous user, value should always be default",
             "required": true
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "order id"
           }
         ],
         "responses": {
@@ -449,17 +478,32 @@
             "schema": {
               "$ref": "#/definitions/shippingAddresses-save-response"
             }
+          },
+          "422": {
+            "description": "invalidate fields detected",
+            "schema": {
+              "$ref": "#/definitions/shippingAddresses-save-error-response"
+            }
           }
         }
       }
     },
-    "/rest/checkout/shippingOptions": {
+    "/rest/checkout/{orderId}/shippingOptions": {
       "get": {
         "tags": [
           "CHECKOUT"
         ],
         "summary": "Get all shipping methods",
         "description": "Get all shipping methods related to order`s shipping address",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "order id"
+          }
+        ],
         "responses": {
           "200": {
             "description": "sucess response",
@@ -470,7 +514,7 @@
         }
       }
     },
-    "/rest/checkout/shippingOptions/{shippingMethod}": {
+    "/rest/checkout/{orderId}/shippingOptions/{shippingMethod}": {
       "post": {
         "tags": [
           "CHECKOUT"
@@ -483,6 +527,13 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "order id"
           }
         ],
         "responses": {
@@ -495,7 +546,7 @@
         }
       }
     },
-    "/rest/checkout/shippingOptions/saveAdditionalShippingInfo": {
+    "/rest/checkout/{orderId}/shippingOptions/saveAdditionalShippingInfo": {
       "post": {
         "tags": [
           "CHECKOUT"
@@ -508,6 +559,13 @@
             "in": "query",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "order id"
           }
         ],
         "responses": {
@@ -522,7 +580,7 @@
     },
     "/rest/miniCart": {
       "get": {
-        "summary": "Display mini cart detail",
+        "summary": "Return mini cart detail",
         "description": "Get mini cart detail info, no specific parameter required but user cookies",
         "tags": [
           "CART"
@@ -539,7 +597,7 @@
     },
     "/rest/cart": {
       "get": {
-        "summary": "Display shopping cart detail",
+        "summary": "Return shopping cart detail",
         "description": "Display shopping cart detail, no specific parameter require but cookies",
         "tags": [
           "CART"
@@ -578,7 +636,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/addItem-response"
+              "$ref": "#/definitions/cartResponse"
             }
           }
         }
@@ -621,7 +679,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/response"
+              "$ref": "#/definitions/cartResponse"
             }
           }
         }
@@ -648,7 +706,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#definitions/response"
+              "$ref": "#definitions/cartResponse"
             }
           }
         }
@@ -674,13 +732,13 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/response"
+              "$ref": "#/definitions/cartResponse"
             }
           }
         }
       },
       "put": {
-        "summary": "Apply promotion coupon to order",
+        "summary": "Apply promotion to order",
         "tags": [
           "CART"
         ],
@@ -698,7 +756,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/response"
+              "$ref": "#/definitions/cartResponse"
             }
           }
         }
@@ -718,15 +776,31 @@
       "type": "object",
       "properties": {
         "cart": {
-          "$ref": "#/definitions/cart"
+          "$ref": "#/definitions/order"
         }
       }
     },
     "miniCart": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "The order id",
+          "default": "o140002"
+        },
+        "profileId": {
+          "type": "string",
+          "description": "The profile id",
+          "default": "pf230000"
+        },
+        "totalCommerceItemCount": {
+          "type": "number",
+          "format": "long",
+          "description": "The total of commerce item",
+          "default": 1
+        },
         "price": {
-          "$ref": "#/definitions/orderPrice"
+          "$ref": "#/definitions/orderPriceInfo"
         },
         "commerceItems": {
           "type": "array",
@@ -736,7 +810,7 @@
         }
       }
     },
-    "cart": {
+    "order": {
       "type": "object",
       "properties": {
         "id": {
@@ -761,13 +835,25 @@
             "$ref": "#/definitions/commerceItem"
           }
         },
-        "price": {
-          "$ref": "#/definitions/orderPrice"
+        "priceInfo": {
+          "$ref": "#/definitions/orderPriceInfo"
         },
         "convertedPrice": {
-          "$ref": "#/definitions/orderPrice"
+          "$ref": "#/definitions/orderPriceInfo"
         },
-        "promotions": {
+        "shippingGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/shippingGroup"
+          }
+        },
+        "orderPromotions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/promotion"
+          }
+        },
+        "shippingPromotions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/promotion"
@@ -775,23 +861,54 @@
         }
       }
     },
+    "shippingGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The shipping group id",
+          "default": "sg140009"
+        },
+        "shippingMethod": {
+          "$ref": "#/definitions/shippingMethod"
+        },
+        "description": {
+          "type": "string",
+          "description": "The shipping description",
+          "default": "sg140009"
+        },
+        "shippingAddress": {
+          "$ref": "#/definitions/address"
+        },
+        "citizenShipCode": {
+          "type": "string",
+          "description": "the citizen code of user"
+        }
+      }
+    },
     "promotion": {
       "type": "object",
       "properties": {
-        "promotionCode": {
+        "couponCode": {
           "type": "string",
           "description": "The applied promotion code",
-          "default": ""
+          "default": "dclm252b2"
         },
-        "promotionDescription": {
+        "displayName": {
           "type": "string",
-          "description": "promotion description",
-          "default": "buy 0309198 get R28886162"
+          "description": "The promotion display name",
+          "default": "Order 10% off"
         },
-        "promotionType": {
-          "type": "integer",
-          "description": "the digital '0' -> item discount, 1 -> Shipping Discount 2 -> Order Discount",
-          "default": 2
+        "discount": {
+          "type": "number",
+          "format": "double",
+          "description": "The discount price",
+          "default": -34
+        },
+        "description": {
+          "type": "string",
+          "description": "The promotion description",
+          "default": ""
         }
       }
     },
@@ -844,15 +961,21 @@
           "description": "item quantity",
           "default": 1
         },
-        "price": {
-          "$ref": "#/definitions/itemPrice"
+        "priceInfo": {
+          "$ref": "#/definitions/itemPriceInfo"
         },
         "convertedPrice": {
-          "$ref": "#/definitions/itemPrice"
+          "$ref": "#/definitions/itemPriceInfo"
+        },
+        "itemPromotions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/promotion"
+          }
         }
       }
     },
-    "itemPrice": {
+    "itemPriceInfo": {
       "type": "object",
       "description": "The item price info",
       "properties": {
@@ -875,7 +998,7 @@
         "rawTotalPrice": {
           "type": "number",
           "format": "double",
-          "description": "Raw totoal price without discount",
+          "description": "Raw total price without discount",
           "default": 1000
         },
         "currencyCode": {
@@ -897,7 +1020,7 @@
         }
       }
     },
-    "orderPrice": {
+    "orderPriceInfo": {
       "type": "object",
       "description": "The price detail of current order",
       "properties": {
@@ -995,6 +1118,9 @@
         "sucess": {
           "type": "boolean",
           "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/order"
         }
       }
     },
@@ -1032,6 +1158,9 @@
         "sucess": {
           "type": "boolean",
           "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/order"
         }
       }
     },
@@ -1041,6 +1170,24 @@
         "success": {
           "type": "boolean",
           "default": true
+        },
+        "result": {
+          "$ref": "#/definitions/order"
+        }
+      }
+    },
+    "shippingAddresses-save-error-response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exception"
+          }
         }
       }
     },
@@ -1162,43 +1309,8 @@
         },
         "additionalField": {
           "type": "string",
-          "description": "additional field which related to current shipping method",
-          "default": "citizenshipCode"
-        }
-      }
-    },
-    "addItem-response": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean",
-          "default": true
-        }
-      }
-    },
-    "exception": {
-      "type": "object",
-      "properties": {
-        "errorCode": {
-          "type": "string",
-          "description": "error code",
-          "default": "quantityInvalid"
-        },
-        "errorMessage": {
-          "type": "string",
-          "description": "error message",
-          "default": "quantity is not enough"
-        }
-      }
-    },
-    "addItem-request": {
-      "type": "object",
-      "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/addItem"
-          }
+          "description": "additional fields required by current shipping method",
+          "default": "citizenshipCode addItem-response: type: object properties: success: type: boolean default: true exception: type: object properties: errorCode: type: string description: error code default: invalidState errorMessage: type: string description: error message default: state is not exist addItem-request: type: object properties: items: type: array items: $ref: "
         }
       }
     },
