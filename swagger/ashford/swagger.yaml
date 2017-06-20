@@ -1106,7 +1106,6 @@ definitions:
       label:
         type: string
         description: 'price label, used to show the price label in front-end.'
-        default: CLEARANCE
       currency:
         type: string
         description: 'currency code '

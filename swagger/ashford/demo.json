@@ -1533,8 +1533,7 @@
         },
         "label": {
           "type": "string",
-          "description": "price label, used to show the price label in front-end.",
-          "default": "CLEARANCE"
+          "description": "price label, used to show the price label in front-end."
         },
         "currency": {
           "type": "string",
