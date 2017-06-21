@@ -253,11 +253,11 @@ paths:
     get:
       tags:
         - CHECKOUT
-      summary: Get all available shipping addresses
+      summary: Get all available shipping addresses for logged users during checkout.
       description: >-
-        -> 'This API is only for logged users. And suits for below scenarios 1.
-        After API /cart/checkout, landing to checkout page and require data for
-        shipping addresses display'
+        This API is only for logged users. please not called this API if it is
+        anonymous user. User cookies are required, please refer to
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
       parameters:
         - name: orderId
           in: path
@@ -272,10 +272,11 @@ paths:
     post:
       tags:
         - CHECKOUT
-      summary: Create shipping addresses
+      summary: Create a new shipping addresses during checkout
       description: >-
-        -> 'Create shipping addresses. And suits for below scenarios 1. User
-        save a new shipping address'
+        Create shipping addresses. And suits for below scenarios 1. User save a
+        new shipping address. User cookies are required, please refer to
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
       produces:
         - application/json
       consumes:
@@ -300,15 +301,18 @@ paths:
         - CHECKOUT
       summary: Get address data by nickName
       description: >-
-        when landing shipping edit page, get address data by nickName of address
-        book.  For anonymous user, please put default for nickName
+        when landing shipping edit page, get address data by nickName of
+        addressbook.  For anonymous user, please put "default" as nickName. User
+        cookies are required, please refer to
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
       parameters:
         - name: nickName
           in: path
           type: string
           description: >-
             Retrieve specified shipping address according to nick name for
-            logged in users. For anonymous user, value should always be default
+            logged in users. For anonymous user, value should always be
+            'default'
           required: true
         - name: orderId
           in: path
@@ -326,7 +330,9 @@ paths:
       summary: Update shipping address
       description: >-
         when saving or selecting existed shipping address. For anonymous user,
-        please put default for nickName
+        please put "default" for nickName. User cookies are required, please
+        refer to
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
       produces:
         - application/json
       consumes:
@@ -341,7 +347,9 @@ paths:
           type: string
           description: >-
             Update specified shipping address according to nick name for logged
-            in users. For anonymous user, value should always be default
+            in users. For anonymous user, value should always be "default". User
+            cookies are required, please refer to           
+            https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
           required: true
         - name: orderId
           in: path
@@ -363,8 +371,10 @@ paths:
         - CHECKOUT
       summary: Get all shipping methods
       description: >-
-        After updating, selecting or creating shipping, Get all shipping methods
-        related to order`s shipping address
+        After updating, selecting or creating shipping address, Get all
+        available shipping methods related to order`s shipping address. User
+        cookies are required, please refer to
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
       parameters:
         - name: orderId
           in: path
@@ -380,8 +390,8 @@ paths:
     post:
       tags:
         - CHECKOUT
-      summary: Save shipping option.
-      description: ' When saving selected shipping option.'
+      summary: Save shipping option once shipping method is changed.
+      description: ' When saving selected shipping option. User cookies are required, please refer to https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions'
       parameters:
         - name: shippingMethod
           in: path
@@ -402,7 +412,10 @@ paths:
       tags:
         - CHECKOUT
       summary: Save additional shipping info
-      description: When saving additional shipping info.
+      description: >-
+        When saving additional shipping info. For example, SF shipping method
+        required citizen code. User cookies are required, please refer to
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions
       parameters:
         - name: citizenshipCode
           in: query
@@ -423,7 +436,7 @@ paths:
       summary: Return mini cart detail
       description: >-
         Get mini cart detail info, no specific parameter required but user
-        cookies
+        cookies(https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       tags:
         - CART
       responses:
@@ -438,7 +451,10 @@ paths:
   /rest/cart:
     get:
       summary: Return shopping cart detail
-      description: 'Display shopping cart detail, no specific parameter require but cookies'
+      description: >-
+        Get shopping cart detail, no specific parameter required but user 
+        cookies(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       tags:
         - CART
       responses:
@@ -456,7 +472,9 @@ paths:
         - CART
       description: >-
         add sku(s) to cart. This API support add one item into cart also
-        supports the advanced features of add multiple items into cart.
+        supports the advanced features of add multiple items into cart. And the
+        user  cookies are required(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       produces:
         - application/json
       consumes:
@@ -477,7 +495,10 @@ paths:
             $ref: '#/definitions/exception'
     put:
       summary: Update item quantity
-      description: ''
+      description: >-
+        Update the quantity of items within the cart, and the user cookies are
+        required(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       tags:
         - CART
       parameters:
@@ -491,21 +512,6 @@ paths:
         '200':
           description: success response
           schema:
-            $ref: '#/definitions/response'
-        '400':
-          description: error response
-          schema:
-            $ref: '#/definitions/exception'
-  /rest/checkout:
-    get:
-      summary: Checkout the order
-      description: No specific parameter required but cookies.
-      tags:
-        - CART
-      responses:
-        '200':
-          description: success response
-          schema:
             $ref: '#/definitions/cartResponse'
         '400':
           description: error response
@@ -514,7 +520,9 @@ paths:
   '/rest/cart/items/{id}':
     delete:
       summary: Remove commerce item from cart
-      description: ''
+      description: >-
+        The user cookies are required(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       tags:
         - CART
       parameters:
@@ -536,6 +544,9 @@ paths:
   '/rest/cart/promotions/{id}':
     delete:
       summary: Remove promotion from order
+      description: >-
+        The user cookies are required(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       tags:
         - CART
       parameters:
@@ -556,6 +567,9 @@ paths:
             $ref: '#/definitions/exception'
     put:
       summary: Apply promotion to order
+      description: >-
+        The user cookies are required(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
       tags:
         - CART
       parameters:
@@ -565,6 +579,24 @@ paths:
           required: true
           type: string
           default: co002
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/cartResponse'
+        '400':
+          description: error response
+          schema:
+            $ref: '#/definitions/exception'
+  /rest/checkout:
+    get:
+      summary: Continuing the Checkout Process
+      description: >-
+        No specific parameter required but cookies. The user cookies are
+        required(
+        https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions)
+      tags:
+        - CART
       responses:
         '200':
           description: success response
@@ -584,7 +616,7 @@ definitions:
     type: object
     properties:
       cart:
-        $ref: '#/definitions/order'
+        $ref: '#/definitions/cart'
   miniCart:
     type: object
     properties:
@@ -601,12 +633,46 @@ definitions:
         format: long
         description: The total of commerce item
         default: 1
-      price:
+      orderPriceInfo:
+        $ref: '#/definitions/orderPriceInfo'
+      convertedOrderPriceInfo:
         $ref: '#/definitions/orderPriceInfo'
       commerceItems:
         type: array
         items:
           $ref: '#/definitions/commerceItem'
+  cart:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The order id
+        default: o140002
+      profileId:
+        type: string
+        description: The profile id
+        default: pf230000
+      totalCommerceItemCount:
+        type: number
+        format: long
+        description: The total of commerce item
+        default: 1
+      commerceItems:
+        type: array
+        items:
+          $ref: '#/definitions/commerceItem'
+      priceInfo:
+        $ref: '#/definitions/orderPriceInfo'
+      convertedPriceInfo:
+        $ref: '#/definitions/orderPriceInfo'
+      orderPromotions:
+        type: array
+        items:
+          $ref: '#/definitions/promotion'
+      shippingPromotions:
+        type: array
+        items:
+          $ref: '#/definitions/promotion'
   order:
     type: object
     properties:
@@ -629,7 +695,7 @@ definitions:
           $ref: '#/definitions/commerceItem'
       priceInfo:
         $ref: '#/definitions/orderPriceInfo'
-      convertedPrice:
+      convertedPriceInfo:
         $ref: '#/definitions/orderPriceInfo'
       shippingGroups:
         type: array
@@ -654,7 +720,9 @@ definitions:
         $ref: '#/definitions/shippingMethod'
       description:
         type: string
-        description: The shipping description
+        description: >-
+          The shipping description (based traslation solution, it may only
+          return as contentkey)
         default: sg140009
       shippingAddress:
         $ref: '#/definitions/address'
@@ -670,7 +738,9 @@ definitions:
         default: dclm252b2
       displayName:
         type: string
-        description: The promotion display name
+        description: >-
+          The promotion display name(based traslation solution, it may only
+          return as contentkey)
         default: Order 10% off
       discount:
         type: number
@@ -679,7 +749,9 @@ definitions:
         default: -34
       description:
         type: string
-        description: The promotion description
+        description: >-
+          The promotion description (based traslation solution, it may only
+          return as contentkey)
         default: ''
   commerceItem:
     type: object
@@ -698,7 +770,9 @@ definitions:
         default: '0606335'
       productDisplayName:
         type: string
-        description: product display name
+        description: >-
+          product display name (based traslation solution, it may only return as
+          contentkey)
         default: Men Defio
       productURL:
         type: string
@@ -721,7 +795,7 @@ definitions:
         format: long
         description: item quantity
         default: 1
-      priceInfo:
+      itemPriceInfo:
         $ref: '#/definitions/itemPriceInfo'
       convertedPrice:
         $ref: '#/definitions/itemPriceInfo'
@@ -972,6 +1046,10 @@ definitions:
         type: string
         description: the name of shipping method
         default: EMS
+      translatedName:
+        type: string
+        description: the translation of shipping method name
+        default: EMS
       shippingCost:
         description: The price of current shipping method
         $ref: '#/definitions/priceDetail'
@@ -998,6 +1076,10 @@ definitions:
       errorMessage:
         type: string
         description: error message
+        default: error message
+      translatedErrorMessage:
+        type: string
+        description: translation of error message
         default: error message
   addItem-request:
     type: object
