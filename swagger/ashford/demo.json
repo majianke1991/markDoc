@@ -220,6 +220,20 @@
             "default": "N-7z3",
             "type": "string",
             "format": "string"
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "description": "current page index",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "name": "recordPerPage",
+            "in": "query",
+            "description": "number of record return per page",
+            "type": "integer",
+            "default": 40
           }
         ],
         "responses": {
