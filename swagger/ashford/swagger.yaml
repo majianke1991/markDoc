@@ -366,6 +366,13 @@ paths:
           type: string
           required: true
           description: order id
+        - name: edit
+          in: query
+          type: boolean
+          required: true
+          description: >-
+            indicate this requrest is for selecting or editing existed shipping
+            address
       responses:
         '200':
           description: success response
@@ -914,7 +921,7 @@ definitions:
   shippingAddresses-request:
     type: object
     properties:
-      HKPickup:
+      hkpickup:
         type: boolean
         description: if current address is HK pickup
       address:
@@ -1046,6 +1053,10 @@ definitions:
         type: string
         default: 028-12312312
         description: secondary phone number
+      email:
+        type: string
+        default: markma@aaxischina.com
+        description: email address
       defaultAddress:
         type: boolean
         default: true
@@ -1485,227 +1496,66 @@ definitions:
         $ref: '#/definitions/productInfo'
       enrichmentInfo:
         $ref: '#/definitions/enrichmentInfo'
-  shippingInfo:
-    type: object
-    properties:
-      tabLabel:
-        type: string
-      data:
-        type: string
-  warrantyItem:
-    type: object
-    properties:
-      type:
-        type: string
-        description: Warraty type
-        default: ASHFORD’S WORRY-FREE 2 year warranty
-      typeDesc:
-        type: string
-      description:
-        type: string
-      filePath:
-        type: string
-      count:
-        type: number
-        description: Senquence of current item
-        default: 1
-      fileDownloadMsg:
-        type: string
-      imagePath:
-        type: string
-        default: /images/ashford/pdp/warranty3.png
-        description: Image path
-  warrantyInfo:
-    type: object
-    properties:
-      tabLabel:
-        type: string
-      warrantyTitle:
-        type: string
-      repairServicesMsg:
-        type: string
-      warrantyItems:
-        type: array
-        items:
-          $ref: '#/definitions/warrantyItem'
-  brandStory:
-    type: object
-    properties:
-      brandTitle:
-        type: string
-      tabLabel:
-        type: string
-      pTitle:
-        type: string
-      brandDescription:
-        type: string
-      brandUrl:
-        type: string
-      catTitle:
-        type: string
-      catDescription:
-        type: string
-      catUrl:
-        type: string
-      brandProductTitle:
-        type: string
-      brandName:
-        type: string
-      useProductDisplayName:
-        type: boolean
-      productDisplayName:
-        type: string
-      concatenatedProductName:
-        type: string
-      productUrl:
-        type: string
-      genderDisplayName:
-        type: string
-      catName:
-        type: string
-      productDescription:
-        type: string
-  iteminfo:
-    type: object
-    properties:
-      name:
-        type: string
-      value:
-        type: string
-  specification:
-    type: object
-    properties:
-      type:
-        type: string
-      label:
-        type: string
-      location:
-        type: string
-      items:
-        type: array
-        items:
-          $ref: '#/definitions/iteminfo'
-  detailInfo:
-    type: object
-    properties:
-      tabLabel:
-        type: string
-      hswwSize:
-        type: string
-      sizeHeader:
-        type: string
-      specification:
-        type: array
-        items:
-          $ref: '#/definitions/specification'
-  enrichmentInfo:
-    type: object
-    properties:
-      detailInfo:
-        type: object
-        $ref: '#/definitions/detailInfo'
-      brandStory:
-        type: object
-        $ref: '#/definitions/brandStory'
-      warrantyInfo:
-        type: object
-        $ref: '#/definitions/warrantyInfo'
-      shippingInfo:
-        type: object
-        $ref: '#/definitions/shippingInfo'
-  skuInfo:
-    type: object
-    properties:
-      skuId:
-        type: string
-      stockMsg:
-        type: string
-      listPriceDesc:
-        type: string
-      listPrice:
-        type: string
-      salePriceDesc:
-        type: string
-      salePrice:
-        type: string
-      ourPriceDesc:
-        type: string
-      ourPrice:
-        type: string
-      savingsDesc:
-        type: string
-      savingPrice:
-        type: string
-      showSalePrice:
-        type: boolean
-      sizeDesc:
-        type: string
-      sizeValue:
-        type: string
-      sizeState:
-        type: string
-  breadcrumb:
-    type: object
-    properties:
-      name:
-        type: string
-      url:
-        type: string
   productInfo:
     type: object
     properties:
+      breadcrumbs:
+        type: array
+        items:
+          $ref: '#/definitions/breadcrumb'
+      showComparisonProductLink:
+        type: boolean
+        description: Show comparson production link in PDP page
+        default: false
+      comparisonProductLabel:
+        type: string
+        description: >-
+          If the showComparisonProductLink is true, then the parameter value as
+          the link text
+        default: View 2 Comparisons
       brandName:
         type: string
-        description: Product brand name
-        default: Rado
+        description: descproduct brand display name
+        default: Calvin Klein Jewelry
       brandUrl:
         type: string
         description: Brand landing page url (Will change this to SEO URL pattern)
-        default: /brand-armand-nicolet/_/N-7zn
+        default: >-
+          /us/jewelry/commerce+root/all+brands/calvin+klein+jewelry/cat1830003.cid
       brandTitle:
         type: string
-        description: brand display title
-        default: See Rado Watches
-      selectedSkuId:
-        type: string
-        description: Current selected SKU
-        default: R27814702
+        description: 'brand title, used to in a label'
+        default: See Calvin Klein Jewelry Products
       productUrl:
         type: string
         description: product detail page url
-        default: /watches/rado/rado-true/rado-true-jubile/R27814702.pid
+        default: /us/jewelry/all+brands/calvin+klein+jewelry/illusory/KJ69AE010100.pid
       productName:
         type: string
         description: Product display name
-        default: Rado Men's Rado True Jubile Watch
-      productType:
-        type: string
-        description: Product type To-do
+        default: Women's  Continuity Bracelet
       productDescription:
         type: string
-        description: Product description
-        default: >-
-          Rado, Rado True Jubile, Men's Watch, Ceramic Case, Ceramic Bracelet,
-          Swiss Quartz (Battery-Powered), R27814702
-      productMediaUrl:
+        description: product description
+        default: 'Calvin Klein Jewelry, Continuity, Women''''s Bracelet, KJ10CB01010S'
+      productReadMoreMsg:
         type: string
-        description: To-do
-      productZoomUrl:
-        type: string
-        description: To-do
+        description: >-
+          If the length of productDescription content is gather than 290, show
+          the link with this value of productReadMoreMsg
+        default: ... read more ...
+      productAuxiliaryMedias:
+        type: array
+        items:
+          $ref: '#/definitions/productAuxiliaryMedia'
       concatenatedProductName:
         type: string
-        default: Rado Men's Rado True Jubile Watch
-        description: Short product name
-      productLargeUrl:
-        type: string
-        description: To-do
-      productLargeZoomURL:
-        type: string
-        description: To-do
-      isClearance:
-        type: string
-        description: To-do
+        description: >-
+          concatenated product name,if the useDispName is true, then the value
+          should be product display name, otherwise, the value should be
+          brandName + " " + productGender + " " + collectionName+"
+          "+productType(if the collectionName do not contains the productType)
+        default: Calvin Klein Jewelry Women's Continuity Bracelet
       warrantyItems:
         type: array
         items:
@@ -1714,19 +1564,390 @@ definitions:
         type: boolean
         description: Whether to show warranty description
         default: false
-      skuInfos:
-        type: array
-        items:
-          $ref: '#/definitions/skuInfo'
-      sizeLabel:
+      productLargeUrl:
         type: string
-        description: To-do
-      selectedSize:
+        description: product largeImage url
+        default: /images/catalog/calvin-klein-jewelry/continuity/KJ10CB01010S_FLA.jpg
+      productLargeZoomUrl:
         type: string
-        description: To-do
+        description: product largeImage zoom url
+        default: >-
+          "http://www.ashford.com/images/catalog/calvin-klein-jewelry/continuity/KJ10CB01010S_FXA.jpg"
+      clearance:
+        type: boolean
+        description: >-
+          product is clearance, is used as a flag to check whether display
+          productLargeUrl in page or not
+        default: false
+      productDisplayName:
+        type: string
+        description: product display name
+        default: Calvin Klein Jewelry Continue KJ0EJE100100 Women's Earring
+      skuInfo:
+        $ref: '#/definitions/skuInfo'
       sizeChartLabel:
         type: string
-        description: To-do
+        description: >-
+          size chart label, when the sizeInfos length is gather than 0 , the
+          value shoud not be empty
+        default: SizeChart
       sizeChartImgUrl:
         type: string
-        description: To-do
+        description: >-
+          size chart image url, when the sizeInfos length is gather than 0, the
+          value should not be empty.
+        default: /images/ashford/bracelet.png
+      sizeInfos:
+        type: array
+        items:
+          $ref: '#/definitions/sizeInfo'
+  breadcrumb:
+    type: object
+    properties:
+      name:
+        type: string
+        description: bread crumb name
+        default: Home
+      url:
+        type: string
+        description: bread crumb url
+        default: /us/index.jsp
+  productAuxiliaryMedia:
+    type: object
+    properties:
+      count:
+        type: string
+        description: 'the index of the array productAuxiliaryMedia, start with 1'
+        default: 1
+      imageUrl:
+        type: string
+        description: The product auxiliaryMedia image url
+        default: /images/catalog/zenith/ashford/03-2061-405-21-M2060_FMZ.jpg
+      imageZoomUrl:
+        type: string
+        description: The product auxiliaryMedia image zoom url
+        default: /images/catalog/zenith/ashford/03-2061-405-21-M2060_FXA.jpg
+  warrantyItem:
+    type: object
+    properties:
+      type:
+        type: string
+        description: warranty type
+        default: ASHFORD\u2019S WORRY-FREE 2 year warranty
+      typeDesc:
+        type: string
+        description: >-
+          warranty type description,when "showWarrantyDesc" is true, show the
+          value in pdp page, the value can be html content.
+        default: >-
+          "<P ALIGN='LEFT'>Not 100% satisfied with your purchase? No worries -
+          simply send your item back to Ashford in its new, unused condition,
+          and Ashford will be happy to provide either a full refund of the
+          purchase price or a store credit toward an exchange.</P><P
+          ALIGN='LEFT'><B>PLEASE NOTE:</B></P><P ALIGN='LEFT'>- Items sent to
+          any address outside the United States are considered final sale and
+          cannot be returned.</P><P ALIGN='LEFT'>-  Ashford will only refund the
+          value of the item that is being returned or exchanged; any shipping
+          fees from the original purchase will not be refunded.</P><P
+          ALIGN='LEFT'>-  Return shipping is the responsibility of the
+          buyer.</P><P ALIGN='LEFT'></P>"
+      count:
+        type: integer
+        description: 'the warranty index, start with 1'
+        default: 1
+      description:
+        type: string
+        description: 'warranty description, the value should be html content'
+        default: <span>2</span><span><span>Year</span><span>Warranty</span></span>
+      filePath:
+        type: string
+        description: warranty file path.
+      fileDownloadMsg:
+        type: string
+        description: >-
+          if the filePath is not empty, the value also should not be empty, the
+          value come from resource file.
+        default: 'DOWNLOAD MANUAL & WARRANTY BOOKLET [PDF]'
+      imagePath:
+        type: string
+        description: >-
+          warranty image path, when "showWarrantyDesc" is false, show the value
+          in pdp page.
+        default: 'http://2.shrd.www.ashford.com.edgekey.net/J/9/RW4fRch-M.webp'
+  skuInfo:
+    type: object
+    properties:
+      skuId:
+        type: string
+        description: >-
+          selected sku id, the value will be changed according the user select
+          size
+      inventoryInfo:
+        $ref: '#/definitions/inventoryInfo'
+      showListPrice:
+        type: boolean
+        description: a flag to control should show list price in page
+        default: false
+      listPriceDesc:
+        type: string
+        description: list price description
+        default: 'Retail: '
+      listPrice:
+        type: string
+        description: list price
+        default: $1999.00
+      showSalePrice:
+        type: boolean
+        description: >-
+          the value is used to control whether show the sale price, the value do
+          not display in page
+        default: false
+      salePriceDesc:
+        type: string
+        description: 'sale price description, when the showSalePrice is true'
+        default: 'AshfordPrice: '
+      salePrice:
+        type: string
+        description: 'sale price, when the showSalePrice is true'
+        default: $799.60
+      savingsDesc:
+        type: string
+        description: saving price description
+        default: 'YOURPRICE: '
+      savingPrice:
+        type: string
+        description: saving price
+        default: $447.78
+      showOurPrice:
+        type: boolean
+        description: a flag to control whether show the our price
+        default: false
+      ourPriceDesc:
+        type: string
+        description: our price description
+        default: 'YOURPRICE: '
+      ourPrice:
+        type: string
+        description: our price
+        default: $447.78
+  sizeInfo:
+    type: object
+    properties:
+      value:
+        type: string
+        description: size value
+        default: 6 inches
+      label:
+        type: string
+        description: 'size labe, it used as link value'
+        default: 6
+      state:
+        type: string
+        description: 'size state, the should have "selected","available","selected"'
+        default: selected
+  inventoryInfo:
+    type: object
+    properties:
+      available:
+        type: boolean
+        description: the sku inventory is available
+        default: false
+      stockLevel:
+        type: integer
+        description: 'the stockLevel of sku, it is used to logic judgement in front-end.'
+        default: 0
+      availabilityStatus:
+        type: integer
+        description: 'availabilityStatus of sku, it is used to logic judgement in front-end.'
+        default: 1001
+      outOfStockMsg:
+        type: string
+        description: >-
+          out of stock message, when the available is false, the vlaue shoud not
+          be empty
+        default: Temporarily Out Of Stock
+      contactUs:
+        type: string
+        description: >-
+          the contact us link value, when the available is false and stockLevel
+          is "0", the value should not be empty
+        default: us
+      stockMsg:
+        type: string
+        description: >-
+          stock message, when the available  is ture, the value should not be
+          empty
+        default: In Stock and Ready to Ship  from United States
+  enrichmentInfo:
+    type: object
+    properties:
+      detailInfo:
+        $ref: '#/definitions/detailInfo'
+      brandStory:
+        $ref: '#/definitions/brandStory'
+      warrantyInfo:
+        $ref: '#/definitions/warrantyInfo'
+      shippingInfo:
+        $ref: '#/definitions/shippingInfo'
+  detailInfo:
+    type: object
+    properties:
+      tabLabel:
+        type: string
+        description: Detail tab label message
+        default: Details
+      hswwSize:
+        type: string
+        description: 'product primarySku size, if the value is not empty'
+        default: Small
+      sizeHeader:
+        type: string
+        description: >-
+          size header in page, when the hswwSize is not empty, then the value
+          should not be empty, and the value come from resource file
+        default: size
+      specifications:
+        type: array
+        items:
+          $ref: '#/definitions/specification'
+  specification:
+    type: object
+    properties:
+      type:
+        type: string
+        description: 'specification type, not shown on page'
+        default: FEATURE
+      label:
+        type: string
+        description: specification label
+        default: FUNCTIONS
+      location:
+        type: string
+        description: >-
+          specification location, not shown on page, it used to decide the
+          speicificatin should display left ot right or last
+        default: left
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/itemInfo'
+      excludeSpecCount:
+        type: string
+        description: 'for now, the production disable the exclude specication list'
+  itemInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        description: item name
+        default: item1
+      values:
+        type: array
+        items:
+          type: string
+        description: item values
+  brandStory:
+    type: object
+    properties:
+      tabLabel:
+        type: string
+        description: 'tab label, this value come from resource file'
+        default: Brand story
+      brandHeader:
+        type: string
+        description: 'brandName+" "+productType,  header value'
+        default: Bulova Watches
+      brandDescTitle:
+        type: string
+        description: Title of the label <p> if the brandDescription is not empty
+        default: Brand story
+      brandDescription:
+        type: string
+        description: brand long description
+        default: >-
+          "The Bulova watch company, founded in 1911 by Bohemian immigrant
+          Joseph Bulova, is considered an American icon. The brand developed
+          what is believed to be the world\u2019s first clock radio, ran the
+          world\u2019s first television commercial and created the Accutron, the
+          worl\u2019s first fully electronic timekeeper, which became an
+          integral part of U.S. space technology, used on missions including the
+          first moon walk in 1969. The brand has also produced military watches,
+          aircraft instruments, critical torpedo mechanisms and kept official
+          time on Air Force One."
+      brandUrl:
+        type: string
+        description: brand url
+        default: /watches/bulova/cat6009.cid
+      catTitle:
+        type: string
+        description: category Name + " " + productDisplayType
+        default: Rosedale Watches
+      catDescription:
+        type: string
+        description: 'category long description, if the value is not empty, display in page'
+        default: ''
+      catUrl:
+        type: string
+        description: Category url
+        default: /watches/all+brands/bulova/rosedale/cat787928.cid
+      brandTitle:
+        type: string
+        description: >-
+          The title of a label which  id="sameBrandProduct", and the value
+          should be composed of "See "+brandName+" "+ productDisplayType
+        default: See Seiko Watches
+      useProductDisplayName:
+        type: boolean
+        description: >-
+          The property of the product,product.useDispName, the value should not
+          display in page.
+        default: false
+      productName:
+        type: string
+        description: product display name
+        default: Bulova Women's Rosedale Watch
+      productUrl:
+        type: string
+        description: >-
+          product url, when useProductDisplayName is true, the value shoud not
+          be empty
+        default: /us/watches/bulova/96R168.pid
+      productDescription:
+        type: string
+        description: product.longDescription
+        default: >-
+          "Bulova, Rosedale, Women's Watch, Stainless Steel Case, Stainless
+          Steel Bracelet, Japanese Quartz (Battery-Powered), 96R168"
+  warrantyInfo:
+    type: object
+    properties:
+      tabLabel:
+        type: string
+        description: 'tab label, this value come from resource file'
+        default: Warranty
+      warrantyTitle:
+        type: string
+        description: warranty title
+        default: Warranty
+      repairServicesMsg:
+        type: string
+        description: 'repair service msg, this should be allow html content'
+        default: >-
+          "For repair services, please contact our Repairs Department at
+          1-866-ASHFORD (1-866-274-3673) or via email at <a
+          href=\"mailto:customerservice@ashford.com\">customerservice@ashford.com</a>"
+      warrantyItems:
+        type: array
+        items:
+          $ref: '#/definitions/warrantyItem'
+  shippingInfo:
+    type: object
+    properties:
+      tabLabel:
+        type: string
+        description: 'tab label, this value come from resource file'
+        default: Shipping
+      htmlContent:
+        type: string
+        description: html content
+        default: ''
