@@ -259,7 +259,7 @@ paths:
           description: success response
           schema:
             $ref: '#/definitions/inventory-response'
-  '/rest/checkout/{orderId}/shippingAddresses':
+  '/rest/orders/{orderId}/shippingAddresses':
     get:
       tags:
         - CHECKOUT
@@ -305,7 +305,7 @@ paths:
           description: invalidate fields detected
           schema:
             $ref: '#/definitions/shippingAddresses-save-error-response'
-  '/rest/checkout/{orderId}/shippingAddresses/{nickName}':
+  '/rest/orders/{orderId}/shippingAddresses/{nickName}':
     get:
       tags:
         - CHECKOUT
@@ -382,7 +382,7 @@ paths:
           description: invalidate fields detected
           schema:
             $ref: '#/definitions/shippingAddresses-save-error-response'
-  '/rest/checkout/{orderId}/shippingOptions':
+  '/rest/orders/{orderId}/shippingOptions':
     get:
       tags:
         - CHECKOUT
@@ -403,7 +403,7 @@ paths:
           description: sucess response
           schema:
             $ref: '#/definitions/shippingOptions-response'
-  '/rest/checkout/{orderId}/shippingOptions/{shippingMethod}':
+  '/rest/orders/{orderId}/shippingOptions/{shippingMethod}':
     post:
       tags:
         - CHECKOUT
@@ -424,7 +424,7 @@ paths:
           description: sucess response
           schema:
             $ref: '#/definitions/shippingOptions-save-response'
-  '/rest/checkout/{orderId}/shippingOptions/saveAdditionalShippingInfo':
+  '/rest/orders/{orderId}/shippingOptions/saveAdditionalShippingInfo':
     post:
       tags:
         - CHECKOUT
@@ -448,6 +448,27 @@ paths:
           description: sucess response
           schema:
             $ref: '#/definitions/saveAdditionalShippingInfo-response'
+  '/rest/orders/{orderId}/billing':
+    post:
+      tags:
+        - CHECKOUT
+      summary: Create new credit card payment infomation
+      description: 'Create new credit card payment infomation'
+      parameters:
+        - name: orderId
+          in: path
+          type: string
+          required: true
+          description: order id
+        - name: billing
+          in: body
+          schema:
+            $ref: '#/definitions/billing'
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/order'
   /rest/miniCart:
     get:
       summary: Return mini cart detail
@@ -623,6 +644,61 @@ paths:
           description: error response
           schema:
             $ref: '#/definitions/exception'
+  '/rest/orders/{orderId}/current':
+    get:
+      tags:
+        - CHECKOUT
+      summary: Get current order data
+      description: Get current order data
+      parameters:
+        - name: orderId
+          in: path
+          type: string
+          required: true
+          description: order id
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/order'
+  '/rest/orders/{orderId}':
+    put:
+      tags:
+        - CHECKOUT
+      summary: Place current order
+      description: >-
+        This API is for order replacing and returns the third-party payment URLs
+        with necessary token or payment info for redirection.
+      parameters:
+        - name: orderId
+          in: path
+          type: string
+          required: true
+          description: order id
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/order'
+    get:
+      tags:
+        - CHECKOUT
+      summary: Get placed order data
+      description: >-
+        This API is response for retrieve order info which had been replaced
+        already. But the profile associated with targeted order must be current
+        profile. 
+      parameters:
+        - name: orderId
+          in: path
+          type: string
+          required: true
+          description: order id
+      responses:
+        '200':
+          description: success response
+          schema:
+            $ref: '#/definitions/order'
 definitions:
   miniCartResponse:
     type: object
@@ -718,6 +794,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/shippingGroup'
+      paymentGroups:
+        type: array
+        items:
+          $ref: '#/definitions/paymentGroup'
       orderPromotions:
         type: array
         items:
@@ -851,10 +931,10 @@ definitions:
         format: double
         description: list price
         default: 1000
-      salePrice:
+      unitPrice:
         type: number
         format: double
-        description: sale price
+        description: unit price
         default: 972
   orderPriceInfo:
     type: object
@@ -1951,3 +2031,53 @@ definitions:
         type: string
         description: html content
         default: ''
+  creditCard:
+    type: object
+    properties:
+      creditCardType:
+        type: string
+        description: The type of credit card
+        default: 'visa'
+      creditCardNumber:
+        type: string
+        description: The credit card number
+        default: '4005550000000019'
+      expirationMonth:
+        type: string
+        description: The month that the credit card expires
+        default: '05'
+      expirationYear:
+        type: string
+        description: The year that the credit card expires
+        default: '2018'
+  billing:
+    type: object
+    properties:
+      billing:
+        $ref: '#/definitions/creditCard'
+      billingAddress:
+        $ref: '#/definitions/address'
+  paymentGroup:
+    type: object
+    properties:
+      paymentGroupId:
+        type: string
+        description: The type of credit card
+        default: visa
+      amount:
+        type: number
+        format: double
+        description: the payment total
+        default: 25
+      currencyCode:
+        type: string
+        description: The month that the credit card expires
+        default: ''
+      paymentType:
+        type: string
+        description: The year that the credit card expires
+        default: ''
+      billingAddress:
+        $ref: '#/definitions/address'
+      billing:
+        $ref: '#/definitions/creditCard'
