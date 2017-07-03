@@ -453,7 +453,7 @@ paths:
       tags:
         - CHECKOUT
       summary: Create new credit card payment infomation
-      description: 'Create new credit card payment infomation'
+      description: Create new credit card payment infomation
       parameters:
         - name: orderId
           in: path
@@ -1021,18 +1021,7 @@ definitions:
         type: boolean
         default: true
       result:
-        $ref: '#/definitions/shippingOptions'
-  shippingOptions:
-    type: object
-    properties:
-      currency:
-        type: string
-        description: Currency code of current user
-        default: USD
-      shippingMethods:
-        type: array
-        items:
-          $ref: '#/definitions/shippingMethod'
+        $ref: '#/definitions/shippingMethod'
   shippingOptions-save-response:
     type: object
     properties:
@@ -1367,12 +1356,12 @@ definitions:
         type: string
         description: Category Root Node display name
         default: SHOP BY BRAND
-      link:
+      restURL:
         type: string
         description: >-
-          Category link url, if it is empty means it is not click-able (Will
+          Category rest url, if it is empty means it is not click-able (Will
           change it to SEO URL pattern)
-        default: /brand-armand-nicolet/_/N-7zn
+        default: N-7zn
       subCategories:
         type: array
         items:
@@ -1385,7 +1374,7 @@ definitions:
         type: string
         description: Category display label
         default: Armand Nicolet
-      link:
+      restURL:
         type: string
         description: 'Category link url, if empty means it is not click-able'
         default: ''
@@ -1405,10 +1394,10 @@ definitions:
         type: string
         description: Category menu display label
         default: Armand Nicolet
-      url:
+      restURL:
         type: string
         description: Category link url
-        default: /brand-armand-nicolet/_/N-7zn
+        default: N-7zn
       type:
         type: string
         description: Menu type
@@ -1452,10 +1441,10 @@ definitions:
         type: integer
         default: 10
         description: To indicate the num of products under this facet
-      actionUrl:
+      restURL:
         type: string
         default: ''
-        description: Action url of this facet
+        description: rest url of this facet
       lowerBound:
         type: string
         default: 0
@@ -1501,9 +1490,9 @@ definitions:
         type: boolean
         description: To indicate the current sortby option whether it is selected or not
         default: false
-      actionUrl:
+      restURL:
         type: string
-        description: Action url of the current sortby option.
+        description: Rest url of the current sortby option.
         default: ''
       label:
         type: string
@@ -1512,7 +1501,7 @@ definitions:
   Product:
     type: object
     properties:
-      url:
+      restURL:
         type: string
         default: /watches/armand-nicolet/m02/9641A-AG-M9140.pid
         description: Product detail page url
