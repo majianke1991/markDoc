@@ -533,9 +533,7 @@
             }
           }
         }
-      }
-    },
-    "/rest/orders/{orderId}/shippingOptions/{shippingMethod}": {
+      },
       "post": {
         "tags": [
           "CHECKOUT"
@@ -545,7 +543,7 @@
         "parameters": [
           {
             "name": "shippingMethod",
-            "in": "path",
+            "in": "query",
             "required": true,
             "type": "string"
           },

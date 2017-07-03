@@ -403,7 +403,6 @@ paths:
           description: sucess response
           schema:
             $ref: '#/definitions/shippingOptions-response'
-  '/rest/orders/{orderId}/shippingOptions/{shippingMethod}':
     post:
       tags:
         - CHECKOUT
@@ -411,7 +410,7 @@ paths:
       description: ' When saving selected shipping option. User cookies are required, please refer to https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions'
       parameters:
         - name: shippingMethod
-          in: path
+          in: query
           required: true
           type: string
         - name: orderId
@@ -2026,7 +2025,7 @@ definitions:
       creditCardType:
         type: string
         description: The type of credit card
-        default: 'visa'
+        default: visa
       creditCardNumber:
         type: string
         description: The credit card number
