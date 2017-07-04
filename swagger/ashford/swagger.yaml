@@ -674,11 +674,21 @@ paths:
           type: string
           required: true
           description: order id
+        - name: paymentType
+          in: query
+          type: string
+          required: true
+          description: 'payment type, must be one of CREDITCARD, ALIPAY, PAYPAL or TENPAY'
+        - name: creditCardVerificationNumber
+          in: query
+          type: string
+          required: false
+          description: Verification number of creditCard
       responses:
         '200':
           description: success response
           schema:
-            $ref: '#/definitions/order'
+            $ref: '#/definitions/place-order-response'
     get:
       tags:
         - CHECKOUT
@@ -699,6 +709,16 @@ paths:
           schema:
             $ref: '#/definitions/order'
 definitions:
+  place-order-response:
+    type: object
+    properties:
+      success:
+        type: boolean
+        default: true
+      result:
+        type: string
+        description: The redirection url for third-party payments or credit card
+        default: www.ashford.com/us/checkout/confirmResponse.jsp
   miniCartResponse:
     type: object
     properties:
