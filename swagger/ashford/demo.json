@@ -425,7 +425,7 @@
           "CHECKOUT"
         ],
         "summary": "Get address data by nickName",
-        "description": "when landing shipping edit page, get address data by nickName of addressbook.  For anonymous user, please put \"default\" as nickName. User cookies are required, please refer to https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions",
+        "description": "Note - please encode this url by \"UTF-8\" when landing shipping edit page, get address data by nickName of addressbook. For anonymous user, please put \"default\" as nickName. User cookies are required, please refer to https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions",
         "parameters": [
           {
             "name": "nickName",
@@ -456,7 +456,7 @@
           "CHECKOUT"
         ],
         "summary": "Update shipping address",
-        "description": "when saving or selecting existed shipping address. For anonymous user, please put \"default\" for nickName. User cookies are required, please refer to https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions",
+        "description": "Note - please encode this url by \"UTF-8\" when saving or selecting existed shipping address. For anonymous user, please put \"default\" for nickName. User cookies are required, please refer to https://solution.aaxisgroup.net/wiki/display/ASH/API+Definitions",
         "produces": [
           "application/json"
         ],
@@ -852,7 +852,7 @@
           "200": {
             "description": "success response",
             "schema": {
-              "$ref": "#/definitions/cartResponse"
+              "$ref": "#/definitions/order"
             }
           },
           "400": {
@@ -2158,16 +2158,16 @@
         "showComparisonProductLink": {
           "type": "boolean",
           "description": "Show comparson production link in PDP page",
-          "default": false
+          "default": true
         },
         "comparisonProductLabel": {
           "type": "string",
-          "description": "If the showComparisonProductLink is true, then the parameter value as the link text",
+          "description": "If the showComparisonProductLink is true, then the parameter value as the link text, if the showComparisonProductLink is false, then the value should be empty.",
           "default": "View 2 Comparisons"
         },
         "brandName": {
           "type": "string",
-          "description": "descproduct brand display name",
+          "description": "product brand display name",
           "default": "Calvin Klein Jewelry"
         },
         "brandUrl": {
@@ -2197,7 +2197,7 @@
         },
         "productReadMoreMsg": {
           "type": "string",
-          "description": "If the length of productDescription content is gather than 290, show the link with this value of productReadMoreMsg",
+          "description": "If the length of productDescription value is gather than 290, show an link and the link title is the value of productReadMoreMsg, otherwise it is empty",
           "default": "... read more ..."
         },
         "productAuxiliaryMedias": {
@@ -2208,7 +2208,7 @@
         },
         "concatenatedProductName": {
           "type": "string",
-          "description": "concatenated product name,if the useDispName is true, then the value should be product display name, otherwise, the value should be brandName + \" \" + productGender + \" \" + collectionName+\" \"+productType(if the collectionName do not contains the productType)",
+          "description": "concatenated product name,if the useDispName is true, then the value should be product display name, otherwise, the value should be brandName + \" \" + productGender + \" \" + collectionName+\" \"+ productType(if the collectionName do not contains the productType)",
           "default": "Calvin Klein Jewelry Women's Continuity Bracelet"
         },
         "warrantyItems": {
@@ -2219,7 +2219,7 @@
         },
         "showWarrantyDesc": {
           "type": "boolean",
-          "description": "Whether to show warranty description",
+          "description": "the page whether show the warranty description or not, if the value is false, the warrantyItem.imagePath value can not be empty, otherwise the warrantyItem.typeDesc can not be empty.",
           "default": false
         },
         "productLargeUrl": {
@@ -2247,12 +2247,12 @@
         },
         "sizeChartLabel": {
           "type": "string",
-          "description": "size chart label, when the sizeInfos length is gather than 0 , the value shoud not be empty",
+          "description": "size chart label, when the sizeInfos length is gather than 1 , the value shoud display in the pdp page.",
           "default": "SizeChart"
         },
         "sizeChartImgUrl": {
           "type": "string",
-          "description": "size chart image url, when the sizeInfos length is gather than 0, the value should not be empty.",
+          "description": "size chart image url, when the sizeInfos length is gather than 1, the value should display in the pdp page.",
           "default": "/images/ashford/bracelet.png"
         },
         "sizeInfos": {
@@ -2308,7 +2308,7 @@
         },
         "typeDesc": {
           "type": "string",
-          "description": "warranty type description,when \"showWarrantyDesc\" is true, show the value in pdp page, the value can be html content.",
+          "description": "warranty type description, when \"showWarrantyDesc\" is true, the value should display in pdp page, and the value maybe html content.",
           "default": "\"<P ALIGN='LEFT'>Not 100% satisfied with your purchase? No worries - simply send your item back to Ashford in its new, unused condition, and Ashford will be happy to provide either a full refund of the purchase price or a store credit toward an exchange.</P><P ALIGN='LEFT'><B>PLEASE NOTE:</B></P><P ALIGN='LEFT'>- Items sent to any address outside the United States are considered final sale and cannot be returned.</P><P ALIGN='LEFT'>-  Ashford will only refund the value of the item that is being returned or exchanged; any shipping fees from the original purchase will not be refunded.</P><P ALIGN='LEFT'>-  Return shipping is the responsibility of the buyer.</P><P ALIGN='LEFT'></P>\""
         },
         "count": {
@@ -2327,12 +2327,12 @@
         },
         "fileDownloadMsg": {
           "type": "string",
-          "description": "if the filePath is not empty, the value also should not be empty, the value come from resource file.",
+          "description": "if the filePath is not empty, the value also should not be empty and the value come from resource file.",
           "default": "DOWNLOAD MANUAL & WARRANTY BOOKLET [PDF]"
         },
         "imagePath": {
           "type": "string",
-          "description": "warranty image path, when \"showWarrantyDesc\" is false, show the value in pdp page.",
+          "description": "warranty image path, when \"showWarrantyDesc\" is false, the value can not be empty, should display in pdp page.",
           "default": "http://2.shrd.www.ashford.com.edgekey.net/J/9/RW4fRch-M.webp"
         }
       }
@@ -2350,7 +2350,7 @@
         "showListPrice": {
           "type": "boolean",
           "description": "a flag to control should show list price in page",
-          "default": false
+          "default": true
         },
         "listPriceDesc": {
           "type": "string",
@@ -2360,47 +2360,47 @@
         "listPrice": {
           "type": "string",
           "description": "list price",
-          "default": "$1999.00"
+          "default": "$1,395.00"
         },
         "showSalePrice": {
           "type": "boolean",
-          "description": "the value is used to control whether show the sale price, the value do not display in page",
-          "default": false
+          "description": "If the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005), and the value is true, then should display the salePriceDesc and salePrice in pdp page.",
+          "default": true
         },
         "salePriceDesc": {
           "type": "string",
-          "description": "sale price description, when the showSalePrice is true",
-          "default": "AshfordPrice: "
+          "description": "sale price description",
+          "default": "Sale: "
         },
         "salePrice": {
           "type": "string",
-          "description": "sale price, when the showSalePrice is true",
-          "default": "$799.60"
+          "description": "sale price",
+          "default": "$516.15"
         },
         "savingsDesc": {
           "type": "string",
-          "description": "saving price description",
-          "default": "YOURPRICE: "
+          "description": "saving price description, Only when the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005), and showSalePrice or showOurPrice is ture, can display the value in pdp page.",
+          "default": "You Save 63.00%"
         },
         "savingPrice": {
           "type": "string",
-          "description": "saving price",
-          "default": "$447.78"
+          "description": "saving price, If display in the PDP page, need add \"-\" before it. like \"-$878.85\". Only when the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005), and showSalePrice or showOurPrice is ture, can display the value in pdp page.",
+          "default": "$878.85"
         },
         "showOurPrice": {
           "type": "boolean",
-          "description": "a flag to control whether show the our price",
-          "default": false
+          "description": "If the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005), and the value is true, then should display the salePriceDesc and salePrice in pdp page.",
+          "default": true
         },
         "ourPriceDesc": {
           "type": "string",
           "description": "our price description",
-          "default": "YOURPRICE: "
+          "default": "Ashford Price: "
         },
         "ourPrice": {
           "type": "string",
           "description": "our price",
-          "default": "$447.78"
+          "default": "$809.10"
         }
       }
     },
@@ -2517,8 +2517,8 @@
         },
         "location": {
           "type": "string",
-          "description": "specification location, not shown on page, it used to decide the speicificatin should display left ot right or last",
-          "default": "left"
+          "description": "specification location, not shown on page, it used to decide the specification should display left or right column.",
+          "default": "leftColumn"
         },
         "items": {
           "type": "array",
