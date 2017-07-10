@@ -1329,6 +1329,12 @@
           "format": "double",
           "description": "Discount amount for current order.",
           "default": 28
+        },
+        "duty": {
+          "type": "number",
+          "format": "double",
+          "description": "duty amount for current order.",
+          "default": 28
         }
       }
     },
@@ -1563,6 +1569,10 @@
         },
         "convertedshippingCost": {
           "description": "The converted price of current shipping method",
+          "$ref": "#/definitions/priceDetail"
+        },
+        "duty": {
+          "description": "The shipping duty",
           "$ref": "#/definitions/priceDetail"
         },
         "additionalField": {
