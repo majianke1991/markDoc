@@ -843,7 +843,7 @@ definitions:
         default: sg140009
       shippingAddress:
         $ref: '#/definitions/address'
-      citizenShipCode:
+      additionalField:
         type: string
         description: the citizen code of user
   promotion:
@@ -1600,7 +1600,8 @@ definitions:
         type: string
         description: >-
           If the showComparisonProductLink is true, then the parameter value as
-          the link text, if the showComparisonProductLink is false, then the value should be empty.
+          the link text, if the showComparisonProductLink is false, then the
+          value should be empty.
         default: View 2 Comparisons
       brandName:
         type: string
@@ -1630,8 +1631,9 @@ definitions:
       productReadMoreMsg:
         type: string
         description: >-
-          If the length of productDescription value is gather than 290, show
-          an link and the link title is the value of productReadMoreMsg, otherwise it is empty
+          If the length of productDescription value is gather than 290, show an
+          link and the link title is the value of productReadMoreMsg, otherwise
+          it is empty
         default: ... read more ...
       productAuxiliaryMedias:
         type: array
@@ -1652,8 +1654,9 @@ definitions:
       showWarrantyDesc:
         type: boolean
         description: >-
-          the page whether show the warranty description or not, if the value is false, the warrantyItem.imagePath
-          value can not be empty, otherwise the warrantyItem.typeDesc can not be empty.
+          the page whether show the warranty description or not, if the value is
+          false, the warrantyItem.imagePath value can not be empty, otherwise
+          the warrantyItem.typeDesc can not be empty.
         default: false
       productLargeUrl:
         type: string
@@ -1728,8 +1731,8 @@ definitions:
       typeDesc:
         type: string
         description: >-
-          warranty type description, when "showWarrantyDesc" is true, the
-          value should display in pdp page, and the value maybe html content.
+          warranty type description, when "showWarrantyDesc" is true, the value
+          should display in pdp page, and the value maybe html content.
         default: >-
           "<P ALIGN='LEFT'>Not 100% satisfied with your purchase? No worries -
           simply send your item back to Ashford in its new, unused condition,
@@ -1756,14 +1759,14 @@ definitions:
       fileDownloadMsg:
         type: string
         description: >-
-          if the filePath is not empty, the value also should not be empty and the
-          value come from resource file.
+          if the filePath is not empty, the value also should not be empty and
+          the value come from resource file.
         default: 'DOWNLOAD MANUAL & WARRANTY BOOKLET [PDF]'
       imagePath:
         type: string
         description: >-
-          warranty image path, when "showWarrantyDesc" is false, the value can not be empty,
-          should display in pdp page.
+          warranty image path, when "showWarrantyDesc" is false, the value can
+          not be empty, should display in pdp page.
         default: 'http://2.shrd.www.ashford.com.edgekey.net/J/9/RW4fRch-M.webp'
   skuInfo:
     type: object
@@ -1786,12 +1789,13 @@ definitions:
       listPrice:
         type: string
         description: list price
-        default: $1,395.00
+        default: '$1,395.00'
       showSalePrice:
         type: boolean
         description: >-
-          If the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005),
-          and the value is true, then should display the salePriceDesc and salePrice in pdp page.
+          If the inventory.stockLevel == -1, or (inventory.stockLevel > 0 &&
+          inventory.stockLevel != 1005), and the value is true, then should
+          display the salePriceDesc and salePrice in pdp page.
         default: true
       salePriceDesc:
         type: string
@@ -1804,21 +1808,26 @@ definitions:
       savingsDesc:
         type: string
         description: >-
-          saving price description, Only when the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005),
-          and showSalePrice or showOurPrice is ture, can display the value in pdp page.
-        default: 'You Save 63.00%'
+          saving price description, Only when the inventory.stockLevel == -1, or
+          (inventory.stockLevel > 0 && inventory.stockLevel != 1005), and
+          showSalePrice or showOurPrice is ture, can display the value in pdp
+          page.
+        default: You Save 63.00%
       savingPrice:
         type: string
         description: >-
-          saving price, If display in the PDP page, need add "-" before it. like "-$878.85".
-          Only when the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005),
-          and showSalePrice or showOurPrice is ture, can display the value in pdp page.
+          saving price, If display in the PDP page, need add "-" before it. like
+          "-$878.85". Only when the inventory.stockLevel == -1, or
+          (inventory.stockLevel > 0 && inventory.stockLevel != 1005), and
+          showSalePrice or showOurPrice is ture, can display the value in pdp
+          page.
         default: $878.85
       showOurPrice:
         type: boolean
         description: >-
-          If the inventory.stockLevel == -1, or (inventory.stockLevel > 0 && inventory.stockLevel != 1005),
-          and the value is true, then should display the salePriceDesc and salePrice in pdp page.
+          If the inventory.stockLevel == -1, or (inventory.stockLevel > 0 &&
+          inventory.stockLevel != 1005), and the value is true, then should
+          display the salePriceDesc and salePrice in pdp page.
         default: true
       ourPriceDesc:
         type: string

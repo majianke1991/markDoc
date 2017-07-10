@@ -1140,7 +1140,7 @@
         "shippingAddress": {
           "$ref": "#/definitions/address"
         },
-        "citizenShipCode": {
+        "additionalField": {
           "type": "string",
           "description": "the citizen code of user"
         }
